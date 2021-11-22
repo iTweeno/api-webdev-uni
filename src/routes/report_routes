@@ -1,0 +1,39 @@
+const { NoContent, Created, BadRequest, Ok } = require("../model/common/model");
+
+const reportService = require("../services/report_service.js");
+
+const routeReport = (app) => {
+  app.post("/api/report", async (req, res) => {
+    const inserted = await reportService.addReport(req.body);
+
+    if (!inserted) return BadRequest(res);
+
+    return Created(res);
+  });
+
+  app.patch("/api/report/", async (req, res) => {
+    const edited = await reportService.editReport(req.params.id, req.body);
+
+    if (!edited) return BadRequest(res);
+
+    return Ok(res, req.body);
+  });
+
+  app.get("/api/report", async (req, res) => {
+    const report = await reportService.getReports(req.body);
+
+    if (report == null || report.length === 0) return NoContent(res);
+
+    return Ok(res, report);
+  });
+
+  app.delete("/api/report/:id", async (req, res) => {
+    const deleted = await reportService.deleteReport(req.params.id);
+
+    if (!deleted) return NoContent(res);
+
+    return Ok(res);
+  });
+};
+
+module.exports = routeReport;

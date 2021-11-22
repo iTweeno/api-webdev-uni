@@ -12,14 +12,15 @@ const editAd = async (id, body) => {
   return edited === 1;
 };
 
-const getAdById = async (id) => {
-  const ad = await adConnector.getAdById(id);
-
-  return ad;
-};
-
-const getAdByTitle = async (title, limit) => {
-  const ad = await adConnector.getAdByTitle(title, limit);
+const getAd = async (body) => {
+  let ad;
+  if (body?.id != null) {
+    ad = await adConnector.getAdById(body.id);
+  } else if (body?.title != null && body?.skip != null) {
+    ad = await adConnector.getAdsByTitle(body.title, body.skip);
+  } else {
+    return null;
+  }
 
   return ad;
 };
@@ -30,4 +31,4 @@ const deleteAd = async (id) => {
   return deleted === 1;
 };
 
-module.exports = { addAd, editAd, getAdById, getAdByTitle, deleteAd };
+module.exports = { addAd, editAd, getAd, deleteAd };

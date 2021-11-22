@@ -19,16 +19,8 @@ const routeUser = (app) => {
     return Ok(res, req.body);
   });
 
-  app.get("/api/user/:id", async (req, res) => {
-    const user = await userService.getUserById(req.params.id);
-
-    if (user == null) return NoContent(res);
-
-    return Ok(res, user);
-  });
-
-  app.get("/api/userLogin/", async (req, res) => {
-    const user = await userService.getUserByEmailAndPassword(req.body);
+  app.get("/api/user", async (req, res) => {
+    const user = await userService.getUser(req.body);
 
     if (user == null) return NoContent(res);
 

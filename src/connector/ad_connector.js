@@ -1,10 +1,11 @@
-const pool = require("../utils/postgres_utils");
+const prisma = require("../utils/prisma_utils");
 
 const addAd = async (body) => {
+  body.last_time_updated = new Date(body.last_time_updated);
   try {
-    await pool.query(
-      `INSERT INTO ad(type, salary, currency, last_time_updated, amount_of_times_visited, description, title, owner, category, location) VALUES('${body.type}', ${body.salary}, '${body.currency}', '${body.last_time_updated}', ${body.amount_of_times_visited}, '${body.description}', '${body.title}', '${body.owner}', ${body.category}, '${body.location}');`
-    );
+    await prisma.ad.create({
+      data: body,
+    });
   } catch (e) {
     return 0;
   }
@@ -12,12 +13,15 @@ const addAd = async (body) => {
 };
 
 const editAd = async (id, body) => {
+  body.last_time_updated = new Date(body.last_time_updated);
   try {
-    await pool.query(
-      `UPDATE ad SET type='${body.type}', salary=${body.salary}, currency='${body.currency}', last_time_updated='${body.last_time_updated}', amount_of_times_visited=${body.amount_of_times_visited}, description='${body.description}', title='${body.title}', owner='${body.owner}', category=${body.category}, location='${body.location}' WHERE id = '${id}';`
-    );
+    await prisma.ad.update({
+      where: {
+        id,
+      },
+      data: body,
+    });
   } catch (e) {
-    console.log(e);
     return 0;
   }
   return 1;
@@ -25,20 +29,29 @@ const editAd = async (id, body) => {
 
 const getAdById = async (id) => {
   try {
-    const query = await pool.query(`SELECT * FROM ad WHERE id = '${id}';`);
-    return query.rows[0];
+    const query = await prisma.ad.findFirst({
+      where: {
+        id,
+      },
+    });
+    return query;
   } catch (e) {
     return null;
   }
 };
 
-const getAdByTitle = async (title, limit) => {
+const getAdsByTitle = async (title, skip) => {
   try {
-    const query = await pool.query(
-      `SELECT * FROM ad WHERE title = '${title}'; LIMIT ${10 * limit} OFFSET ${10 * limit}`
-    );
-
-    return query.rows;
+    const query = await prisma.ad.findMany({
+      where: {
+        title: {
+          contains: title,
+        },
+      },
+      take: 10,
+      skip: 10 * skip,
+    });
+    return query;
   } catch (e) {
     return null;
   }
@@ -46,11 +59,15 @@ const getAdByTitle = async (title, limit) => {
 
 const deleteAd = async (id) => {
   try {
-    await pool.query(`DELETE FROM ad WHERE id = '${id}';`);
+    await prisma.ad.delete({
+      where: {
+        id,
+      },
+    });
   } catch (e) {
     return 0;
   }
   return 1;
 };
 
-module.exports = { addAd, editAd, getAdById, getAdByTitle, deleteAd };
+module.exports = { addAd, editAd, getAdById, getAdsByTitle, deleteAd };

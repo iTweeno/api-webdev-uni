@@ -12,14 +12,11 @@ const editUser = async (id, body) => {
   return edited === 1;
 };
 
-const getUserById = async (id) => {
-  const user = await userConnector.getUserById(id);
-
-  return user;
-};
-
-const getUserByEmailAndPassword = async (body) => {
-  const user = await userConnector.getUserByEmailAndPassword(body);
+const getUser = async (body) => {
+  let user;
+  if ((body.email != null && body.password != null) || body.id != null) {
+    user = await userConnector.getUser(body);
+  }
 
   return user;
 };
@@ -30,4 +27,4 @@ const deleteUser = async (id) => {
   return deleted === 1;
 };
 
-module.exports = { addUser, editUser, getUserById, deleteUser, getUserByEmailAndPassword };
+module.exports = { addUser, editUser, getUser, deleteUser };
