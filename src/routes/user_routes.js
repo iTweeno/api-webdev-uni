@@ -20,7 +20,7 @@ const routeUser = (app) => {
   });
 
   app.get("/api/user", async (req, res) => {
-    const user = await userService.getUser(req.body);
+    const user = await userService.getUser(req.query);
 
     if (user == null) return NoContent(res);
 

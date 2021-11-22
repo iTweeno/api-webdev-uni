@@ -12,13 +12,13 @@ const editReport = async (id, body) => {
   return edited === 1;
 };
 
-const getReports = async (body) => {
+const getReports = async (query) => {
   let reports;
-  if (body.id != null) {
-    reports = await reportConnector.getReportById(body.id);
+  if (query.id != null) {
+    reports = await reportConnector.getReportById(query.id);
   } else {
 
-    reports = await reportConnector.getAllReports(body.skip);
+    reports = await reportConnector.getAllReports(query.skip);
   }
 
   return reports;

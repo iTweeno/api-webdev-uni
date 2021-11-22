@@ -11,16 +11,16 @@ const routeMessage = (app) => {
     return Created(res);
   });
 
-  app.patch("/api/message/:id", async (req, res) => {
-    const edited = await messageService.editMessage(req.params.id, req.body);
+  app.patch("/api/message", async (req, res) => {
+    const edited = await messageService.editMessage(req.query.id, req.body);
 
     if (!edited) return BadRequest(res);
 
     return Ok(res, req.body);
   });
 
-  app.get("/api/message/:id", async (req, res) => {
-    const message = await messageService.getMessageById(req.params.id);
+  app.get("/api/message", async (req, res) => {
+    const message = await messageService.getMessageById(req.query.id);
 
     if (message == null) return NoContent(res);
 
@@ -28,15 +28,15 @@ const routeMessage = (app) => {
   });
 
   app.get("/api/message", async (req, res) => {
-    const message = await messageService.getMessagesByPersonId(req.params.id);
+    const message = await messageService.getMessagesByPersonId(req.query.id);
 
     if (message == null || message.length === 0) return NoContent(res);
 
     return Ok(res, message);
   });
 
-  app.delete("/api/message/:id", async (req, res) => {
-    const deleted = await messageService.deleteMessage(req.params.id);
+  app.delete("/api/message", async (req, res) => {
+    const deleted = await messageService.deleteMessage(req.query.id);
 
     if (!deleted) return NoContent(res);
 

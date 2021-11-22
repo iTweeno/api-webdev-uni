@@ -20,7 +20,7 @@ const routeReport = (app) => {
   });
 
   app.get("/api/report", async (req, res) => {
-    const report = await reportService.getReports(req.body);
+    const report = await reportService.getReports(req.query);
 
     if (report == null || report.length === 0) return NoContent(res);
 

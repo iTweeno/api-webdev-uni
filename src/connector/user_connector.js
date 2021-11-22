@@ -1,9 +1,13 @@
+const bcrypt = require("bcrypt");
+
 const prisma = require("../utils/prisma_utils");
 
 const addUser = async (body) => {
-  body.birthday = new Date(body.birthday);
-  body.join_date = new Date(body.join_date);
   try {
+    body.birthday = new Date(body.birthday);
+    body.join_date = new Date(body.join_date);
+    const salt = bcrypt.genSalt(10);
+    body.password = bcrypt.hash(body.password, salt);
     await prisma.userr.create({
       data: body,
     });
@@ -29,13 +33,13 @@ const editUser = async (id, body) => {
   }
 };
 
-const getUser = async (body) => {
+const getUser = async (query) => {
   try {
-    const query = await prisma.userr.findFirst({
-      where: body,
+    const queryDb = await prisma.userr.findFirst({
+      where: query,
     });
-    delete query.password;
-    return query;
+    delete queryDb.password;
+    return queryDb;
   } catch (e) {
     return null;
   }

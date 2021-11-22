@@ -1,6 +1,7 @@
 const userConnector = require("../connector/user_connector");
 
 const addUser = async (body) => {
+
   const inserted = await userConnector.addUser(body);
 
   return inserted === 1;
@@ -12,10 +13,10 @@ const editUser = async (id, body) => {
   return edited === 1;
 };
 
-const getUser = async (body) => {
-  let user;
-  if ((body.email != null && body.password != null) || body.id != null) {
-    user = await userConnector.getUser(body);
+const getUser = async (query) => {
+  let user = null;
+  if ((query.email != null && query.password != null) || query.id != null) {
+    user = await userConnector.getUser(query);
   }
 
   return user;

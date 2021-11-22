@@ -12,12 +12,12 @@ const editAd = async (id, body) => {
   return edited === 1;
 };
 
-const getAd = async (body) => {
+const getAd = async (query) => {
   let ad;
-  if (body?.id != null) {
-    ad = await adConnector.getAdById(body.id);
-  } else if (body?.title != null && body?.skip != null) {
-    ad = await adConnector.getAdsByTitle(body.title, body.skip);
+  if (query?.id != null) {
+    ad = await adConnector.getAdById(query.id);
+  } else if (query?.title != null && query?.skip != null) {
+    ad = await adConnector.getAdsByTitle(query.title, query.skip);
   } else {
     return null;
   }

@@ -11,8 +11,8 @@ const routeAd = (app) => {
     return Created(res);
   });
 
-  app.patch("/api/ad/:id", async (req, res) => {
-    const edited = await adService.editAd(req.params.id, req.body);
+  app.patch("/api/ad", async (req, res) => {
+    const edited = await adService.editAd(req.query.id, req.body);
 
     if (!edited) return BadRequest(res);
 
@@ -27,8 +27,8 @@ const routeAd = (app) => {
     return Ok(res, ad);
   });
 
-  app.delete("/api/ad/:id", async (req, res) => {
-    const deleted = await adService.deleteAd(req.params.id);
+  app.delete("/api/ad", async (req, res) => {
+    const deleted = await adService.deleteAd(req.query.id);
 
     if (!deleted) return NoContent(res);
 
