@@ -4,7 +4,7 @@ const adService = require("../services/ad_service");
 
 const routeAd = (app) => {
   app.post("/api/ad", async (req, res) => {
-    const inserted = await adService.addAd(req.body);
+    const inserted = await adService.addAd(req.body, res.cookie.login_token);
 
     if (!inserted) return BadRequest(res);
 
@@ -12,7 +12,7 @@ const routeAd = (app) => {
   });
 
   app.patch("/api/ad", async (req, res) => {
-    const edited = await adService.editAd(req.query.id, req.body);
+    const edited = await adService.editAd(req.query.id, req.body, res.cookie.login_token);
 
     if (!edited) return BadRequest(res);
 
@@ -28,7 +28,7 @@ const routeAd = (app) => {
   });
 
   app.delete("/api/ad", async (req, res) => {
-    const deleted = await adService.deleteAd(req.query.id);
+    const deleted = await adService.deleteAd(req.query.id, res.cookie.login_token);
 
     if (!deleted) return NoContent(res);
 

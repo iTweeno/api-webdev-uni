@@ -20,4 +20,8 @@ const InternalServerError = (res) => {
   return res.status(500).json();
 };
 
-module.exports = { Created, Ok, NoContent, BadRequest, InternalServerError };
+const Unauthorized = (res) => {
+  return res.status(401).json();
+};
+
+module.exports = { Created, Ok, NoContent, BadRequest, InternalServerError, Unauthorized };

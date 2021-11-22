@@ -1,33 +1,26 @@
 const reportConnector = require("../connector/report_connector");
 
-const addReport = async (body) => {
-  const inserted = await reportConnector.addReport(body);
+const addReport = async (body, token) => {
+  const inserted = await reportConnector.addReport(body, token);
 
   return inserted === 1;
 };
 
-const editReport = async (id, body) => {
-  const edited = await reportConnector.editReport(id, body);
-
-  return edited === 1;
-};
-
-const getReports = async (query) => {
+const getReports = async (query, token) => {
   let reports;
   if (query.id != null) {
-    reports = await reportConnector.getReportById(query.id);
+    reports = await reportConnector.getReportById(query.id, token);
   } else {
-
-    reports = await reportConnector.getAllReports(query.skip);
+    reports = await reportConnector.getAllReports(query.skip, token);
   }
 
   return reports;
 };
 
-const deleteReport = async (id) => {
-  const deleted = await reportConnector.deleteReport(id);
+const deleteReport = async (id, token) => {
+  const deleted = await reportConnector.deleteReport(id, token);
 
   return deleted === 1;
 };
 
-module.exports = { addReport, editReport, getReports, deleteReport };
+module.exports = { addReport, getReports, deleteReport };

@@ -1,66 +1,74 @@
+const jwt = require("jsonwebtoken");
+
 const prisma = require("../utils/prisma_utils");
 
-const addReport = async (body) => {
+const addReport = async (body, token) => {
   try {
-    await prisma.report.create({
-      data: body,
-    });
-  } catch (e) {
-    return 0;
-  }
-  return 1;
-};
+    const tokenVerif = jwt.verify(token, process.env.TOKEN);
 
-const editReport = async (id, body) => {
-  try {
-    await prisma.report.update({
-      where: {
-        id,
-      },
-      data: body,
-    });
-    return 1;
+    if (tokenVerif.user_id === body.user_reporting || tokenVerif.user_type === "admin") {
+      await prisma.report.create({
+        data: body,
+      });
+      return 1;
+    }
+    return 2;
   } catch (e) {
     return 0;
   }
 };
 
-const getReportById = async (id) => {
+const getReportById = async (id, token) => {
   try {
-    const query = await prisma.report.findFirst({
-      where: {
-        id,
-      },
-    });
-    return query;
+    const tokenVerif = jwt.verify(token, process.env.TOKEN);
+
+    if (tokenVerif.user_type === "admin") {
+      const query = await prisma.report.findFirst({
+        where: {
+          id,
+        },
+      });
+      return query;
+    }
+    return 2;
   } catch (e) {
     return null;
   }
 };
 
-const getAllReports = async (skip) => {
+const getAllReports = async (skip, token) => {
   try {
-    const query = await prisma.report.findMany({
-      take: 10,
-      skip: 10 * skip,
-    });
-    return query;
+    const tokenVerif = jwt.verify(token, process.env.TOKEN);
+
+    if (tokenVerif.user_type === "admin") {
+      const query = await prisma.report.findMany({
+        take: 10,
+        skip: 10 * skip,
+      });
+      return query;
+    }
+    return 2;
   } catch (e) {
     return null;
   }
 };
 
-const deleteReport = async (id) => {
+const deleteReport = async (id, token) => {
   try {
-    await prisma.report.delete({
-      where: {
-        id,
-      },
-    });
-    return 1;
+    const tokenVerif = jwt.verify(token, process.env.TOKEN);
+
+    if (tokenVerif.user_type === "admin") {
+      await prisma.report.delete({
+        where: {
+          id,
+        },
+      });
+      return 1;
+    }
+    return 2;
   } catch (e) {
     return 0;
   }
 };
 
-module.exports = { addReport, editReport, getReportById, deleteReport, getAllReports };
+module.exports = { addReport, getReportById, deleteReport, getAllReports };
