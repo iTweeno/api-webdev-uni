@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model ad {
+  id                      String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  type                    String?   @db.VarChar(255)
+  salary                  Int
+  currency                String    @db.VarChar(255)
+  last_time_updated       DateTime  @db.Date
+  amount_of_times_visited Int
+  description             String    @db.VarChar(255)
+  title                   String    @db.VarChar(255)
+  owner                   String    @db.Uuid
+  category                Int
+  location                String    @db.VarChar(255)
+  premium_until           DateTime? @db.Date
+  message                 message[]
+  report                  report[]
+}
+
+model category {
+  id       String  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  number   Int?
+  category String? @db.VarChar(255)
+}
+
+model image {
+  id         String  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  ad_id      String? @db.Uuid
+  image_link String? @db.VarChar(255)
+}
+
+model message {
+  id              String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  ad_id           String   @db.Uuid
+  ad_contacter    String   @db.Uuid
+  message_content String   @db.VarChar(255)
+  sent_at         DateTime @db.Date
+  edited          Boolean
+  userr           userr    @relation(fields: [ad_contacter], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  ad              ad       @relation(fields: [ad_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model report {
+  id              String @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  user_reporting  String @db.Uuid
+  ad_id           String @db.Uuid
+  message_content String @db.VarChar(255)
+  ad              ad     @relation(fields: [ad_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  userr           userr  @relation(fields: [user_reporting], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model userr {
+  id              String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  first_name      String    @db.VarChar(255)
+  last_name       String    @db.VarChar(255)
+  password        String    @db.VarChar(255)
+  phone_number    String    @db.VarChar(255)
+  email           String    @db.VarChar(255)
+  birthday        DateTime  @db.Date
+  join_date       DateTime  @db.Date
+  company         String    @db.VarChar(255)
+  profile_picture String    @db.VarChar(255)
+  user_type       String    @db.VarChar(255)
+  message         message[]
+  report          report[]
+}
