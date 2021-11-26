@@ -1,6 +1,8 @@
-const { NoContent, Created, BadRequest, Ok } = require("../model/common/model");
+import { NoContent, Created, BadRequest, Ok, Unauthorized } from "../model/common/model.js";
 
-const userService = require("../services/user_service");
+import userService from "../services/user_service.js";
+
+import { isUserAuthorizedOrAdmin } from "../plugins/middleware.js";
 
 const routeUser = (app) => {
   app.post("/api/user", async (req, res) => {
@@ -12,7 +14,13 @@ const routeUser = (app) => {
   });
 
   app.patch("/api/user", async (req, res) => {
-    const edited = await userService.editUser(req.query.id, req.body, req.cookie.login_token);
+    const authorized = isUserAuthorizedOrAdmin(req.cookie.login_token, req.query.id);
+
+    if (!authorized) {
+      return Unauthorized(res);
+    }
+
+    const edited = await userService.editUser(req.query.id, req.body);
 
     if (!edited) return BadRequest(res);
 
@@ -38,6 +46,12 @@ const routeUser = (app) => {
   });
 
   app.delete("/api/user", async (req, res) => {
+    const authorized = isUserAuthorizedOrAdmin(req.cookie.login_token, req.query.id);
+
+    if (!authorized) {
+      return Unauthorized(res);
+    }
+
     const deleted = await userService.deleteUser(req.query.id, req.cookies.login_token);
 
     if (!deleted) return NoContent(res);
@@ -46,4 +60,4 @@ const routeUser = (app) => {
   });
 };
 
-module.exports = routeUser;
+export default routeUser;

@@ -1,4 +1,4 @@
-const messageConnector = require("../connector/message_connector");
+import messageConnector from "../connector/message_connector.js";
 
 const addMessage = async (body) => {
   const inserted = await messageConnector.addMessage(body);
@@ -30,4 +30,4 @@ const deleteMessage = async (id) => {
   return deleted === 1;
 };
 
-module.exports = { addMessage, editMessage, getMessageById, deleteMessage, getMessagesByPersonId };
+export default { addMessage, editMessage, getMessageById, deleteMessage, getMessagesByPersonId };

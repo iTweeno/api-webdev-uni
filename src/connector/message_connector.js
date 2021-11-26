@@ -1,76 +1,72 @@
-const jwt = require("jsonwebtoken");
+import prisma from "../utils/prisma_utils.js";
 
-const prisma = require("../utils/prisma_utils");
-
-const addMessage = async (body, token) => {
+const addMessage = async (body) => {
   try {
-    const tokenVerif = jwt.verify(token, process.env.TOKEN);
-
-    if (tokenVerif.user_id === body.ad_contacter || tokenVerif.user_type === "admin") {
-      await prisma.message.create({
-        data: body,
-      });
-      return 1;
-    }
-    return 2;
+    await prisma.message.create({
+      data: body,
+    });
+    return 1;
   } catch (e) {
     return 0;
   }
 };
 
-const editMessage = async (id, body, token) => {
+const editMessage = async (id, body) => {
   try {
-    const tokenVerif = jwt.verify(token, process.env.TOKEN);
-
-    if (tokenVerif.user_id === id || tokenVerif.user_type === "admin") {
-      await prisma.message.update({
-        where: {
-          id,
-        },
-        data: body,
-      });
-      return 1;
-    }
-    return 2;
+    await prisma.message.update({
+      where: {
+        id,
+      },
+      data: body,
+    });
+    return 1;
   } catch (e) {
     return 0;
   }
 };
 
-const getMessageById = async (id, token) => {
+const getMessageById = async (id) => {
   try {
-    const tokenVerif = jwt.verify(token, process.env.TOKEN);
-
-    if (tokenVerif.user_id === id || tokenVerif.user_type === "admin") {
-      const query = await prisma.message.findFirst({
-        where: {
-          id,
-        },
-      });
-      return query;
-    }
-    return 2;
+    const query = await prisma.message.findFirst({
+      where: {
+        id,
+      },
+    });
+    return query;
   } catch (e) {
     return null;
   }
 };
 
-const deleteMessage = async (id, token) => {
+const getMessagesByPersonId = async (id) => {
   try {
-    const tokenVerif = jwt.verify(token, process.env.TOKEN);
+    const query = await prisma.message.findMany({
+      where: {
+        OR: [
+          {
+            messenger: id,
+            receiver: id,
+          },
+        ],
+      },
+    });
+    return query;
+  } catch (e) {
+    return null;
+  }
+};
 
-    if (tokenVerif.user_type === "admin") {
-      await prisma.ad.delete({
-        where: {
-          id,
-        },
-      });
-      return 1;
-    }
-    return 2;
+const deleteMessage = async (id) => {
+  try {
+    await prisma.message.delete({
+      where: {
+        id,
+      },
+    });
+    return 1;
   } catch (e) {
     return 0;
   }
 };
 
-module.exports = { addMessage, editMessage, getMessageById, deleteMessage };
+export default { addMessage, editMessage, getMessageById, deleteMessage, getMessagesByPersonId };

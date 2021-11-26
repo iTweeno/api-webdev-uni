@@ -1,4 +1,4 @@
-const adConnector = require("../connector/ad_connector");
+import adConnector from "../connector/ad_connector.js";
 
 const addAd = async (body) => {
   const inserted = await adConnector.addAd(body);
@@ -31,4 +31,4 @@ const deleteAd = async (id) => {
   return deleted === 1;
 };
 
-module.exports = { addAd, editAd, getAd, deleteAd };
+export default { addAd, editAd, getAd, deleteAd };

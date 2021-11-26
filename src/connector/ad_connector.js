@@ -1,45 +1,30 @@
-const jwt = require("jsonwebtoken");
+import prisma from "../utils/prisma_utils.js";
 
-const prisma = require("../utils/prisma_utils");
-
-const addAd = async (body, token) => {
+const addAd = async (body) => {
   const adToEdit = body;
   try {
-    const tokenVerif = jwt.verify(token, process.env.TOKEN);
-
-    if (tokenVerif.user_id === body.owner || tokenVerif.user_type === "admin") {
-      adToEdit.last_time_updated = new Date(body.last_time_updated);
-      await prisma.ad.create({
-        data: adToEdit,
-      });
-      return 1;
-    }
-    return 2;
+    adToEdit.last_time_updated = new Date(body.last_time_updated);
+    await prisma.ad.create({
+      data: adToEdit,
+    });
+    return 1;
   } catch (e) {
     return 0;
   }
 };
 
-const editAd = async (id, body, token) => {
+const editAd = async (id, body) => {
   const adToEdit = body;
   try {
-    const ad = prisma.ad.findFirst({
-      where: id,
+    adToEdit.last_time_updated = new Date(body.last_time_updated);
+
+    await prisma.ad.update({
+      where: {
+        id,
+      },
+      data: adToEdit,
     });
-    const tokenVerif = jwt.verify(token, process.env.TOKEN);
-
-    if (tokenVerif.user_id === ad.owner || tokenVerif.user_type === "admin") {
-      adToEdit.last_time_updated = new Date(body.last_time_updated);
-
-      await prisma.ad.update({
-        where: {
-          id,
-        },
-        data: adToEdit,
-      });
-      return 1;
-    }
-    return 2;
+    return 1;
   } catch (e) {
     return 0;
   }
@@ -75,25 +60,17 @@ const getAdsByTitle = async (title, skip) => {
   }
 };
 
-const deleteAd = async (id, token) => {
+const deleteAd = async (id) => {
   try {
-    const ad = prisma.ad.findFirst({
-      where: id,
+    await prisma.ad.delete({
+      where: {
+        id,
+      },
     });
-    const tokenVerif = jwt.verify(token, process.env.TOKEN);
-
-    if (tokenVerif.user_id === ad.owner || tokenVerif.user_type === "admin") {
-      await prisma.ad.delete({
-        where: {
-          id,
-        },
-      });
-      return 1;
-    }
-    return 2;
+    return 1;
   } catch (e) {
     return 0;
   }
 };
 
-module.exports = { addAd, editAd, getAdById, getAdsByTitle, deleteAd };
+export default { addAd, editAd, getAdById, getAdsByTitle, deleteAd };

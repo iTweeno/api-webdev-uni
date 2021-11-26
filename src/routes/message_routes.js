@@ -1,10 +1,18 @@
-const { NoContent, Created, BadRequest, Ok } = require("../model/common/model");
+import { NoContent, Created, BadRequest, Ok, Unauthorized } from "../model/common/model.js";
 
-const messageService = require("../services/message_service");
+import messageService from "../services/message_service.js";
+
+import { isUserAuthorizedOrAdmin, isUserAdmin } from "../plugins/middleware.js";
 
 const routeMessage = (app) => {
   app.post("/api/message", async (req, res) => {
-    const inserted = await messageService.addMessage(req.body, res.cookie.login_token);
+    const authorized = isUserAuthorizedOrAdmin(req.cookie.login_token, req.body.messenger);
+
+    if (!authorized) {
+      return Unauthorized(res);
+    }
+
+    const inserted = await messageService.addMessage(req.body);
 
     if (!inserted) return BadRequest(res);
 
@@ -12,7 +20,13 @@ const routeMessage = (app) => {
   });
 
   app.patch("/api/message", async (req, res) => {
-    const edited = await messageService.editMessage(req.query.id, req.body, res.cookie.login_token);
+    const authorized = isUserAdmin(req.cookie.login_token, req.body.messenger);
+
+    if (!authorized) {
+      return Unauthorized(res);
+    }
+
+    const edited = await messageService.editMessage(req.query.id, req.body);
 
     if (!edited) return BadRequest(res);
 
@@ -20,15 +34,27 @@ const routeMessage = (app) => {
   });
 
   app.get("/api/message", async (req, res) => {
-    const message = await messageService.getMessageById(req.query.id, res.cookie.login_token);
+    const authorized = isUserAuthorizedOrAdmin(req.cookie.login_token, req.query.id);
+
+    if (!authorized) {
+      return Unauthorized(res);
+    }
+
+    const message = await messageService.getMessageById(req.query.id);
 
     if (message == null) return NoContent(res);
 
     return Ok(res, message);
   });
 
-  app.get("/api/message", async (req, res) => {
-    const message = await messageService.getMessagesByPersonId(req.query.id, res.cookie.login_token);
+  app.get("/api/message/allMessages", async (req, res) => {
+    const authorized = isUserAuthorizedOrAdmin(req.cookie.login_token, req.query.id);
+
+    if (!authorized) {
+      return Unauthorized(res);
+    }
+
+    const message = await messageService.getMessagesByPersonId(req.query.id);
 
     if (message == null || message.length === 0) return NoContent(res);
 
@@ -36,6 +62,12 @@ const routeMessage = (app) => {
   });
 
   app.delete("/api/message", async (req, res) => {
+    const authorized = isUserAdmin(req.cookie.login_token, req.body.user_reporting);
+
+    if (!authorized) {
+      return Unauthorized(res);
+    }
+
     const deleted = await messageService.deleteMessage(req.query.id, res.cookie.login_token);
 
     if (!deleted) return NoContent(res);
@@ -44,4 +76,4 @@ const routeMessage = (app) => {
   });
 };
 
-module.exports = routeMessage;
+export default routeMessage;

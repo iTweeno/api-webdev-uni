@@ -1,21 +1,21 @@
-const express = require("express");
+import express from "express";
 
-const cookieParser = require("cookie-parser");
+import cookieParser from "cookie-parser";
 
-const { json } = require("body-parser");
+import bodyParser from "body-parser";
 
-const routeUser = require("../routes/user_routes");
+import routeUser from "../routes/user_routes.js";
 
-const routeAd = require("../routes/ad_routes");
+import routeAd from "../routes/ad_routes.js";
 
-const routeMessage = require("../routes/message_routes");
+import routeMessage from "../routes/message_routes.js";
 
-const routeReport = require("../routes/report_routes");
+import routeReport from "../routes/report_routes.js";
 
 const startExpressInstance = async () => {
   const app = express();
 
-  app.use(json());
+  app.use(bodyParser.json());
   app.use(cookieParser());
 
   routeUser(app);
@@ -26,6 +26,7 @@ const startExpressInstance = async () => {
   app.listen(6000, () => {
     console.log("Server listening on port 420");
   });
+  return app;
 };
 
-module.exports = startExpressInstance;
+export { startExpressInstance };

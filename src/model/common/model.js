@@ -24,4 +24,4 @@ const Unauthorized = (res) => {
   return res.status(401).json();
 };
 
-module.exports = { Created, Ok, NoContent, BadRequest, InternalServerError, Unauthorized };
+export { Created, Ok, NoContent, BadRequest, InternalServerError, Unauthorized };

@@ -1,5 +1,5 @@
-const { PrismaClient } = require("@prisma/client");
+import PrismaLib from "@prisma/client";
 
-const prisma = new PrismaClient();
+const prisma = new PrismaLib.PrismaClient();
 
-module.exports = prisma;
+export default prisma;

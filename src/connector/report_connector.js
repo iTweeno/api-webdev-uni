@@ -1,74 +1,52 @@
-const jwt = require("jsonwebtoken");
+import prisma from "../utils/prisma_utils.js";
 
-const prisma = require("../utils/prisma_utils");
-
-const addReport = async (body, token) => {
+const addReport = async (body) => {
   try {
-    const tokenVerif = jwt.verify(token, process.env.TOKEN);
-
-    if (tokenVerif.user_id === body.user_reporting || tokenVerif.user_type === "admin") {
-      await prisma.report.create({
-        data: body,
-      });
-      return 1;
-    }
-    return 2;
+    await prisma.report.create({
+      data: body,
+    });
+    return 1;
   } catch (e) {
     return 0;
   }
 };
 
-const getReportById = async (id, token) => {
+const getReportById = async (id) => {
   try {
-    const tokenVerif = jwt.verify(token, process.env.TOKEN);
-
-    if (tokenVerif.user_type === "admin") {
-      const query = await prisma.report.findFirst({
-        where: {
-          id,
-        },
-      });
-      return query;
-    }
-    return 2;
+    const query = await prisma.report.findFirst({
+      where: {
+        id,
+      },
+    });
+    return query;
   } catch (e) {
     return null;
   }
 };
 
-const getAllReports = async (skip, token) => {
+const getAllReports = async (skip) => {
   try {
-    const tokenVerif = jwt.verify(token, process.env.TOKEN);
-
-    if (tokenVerif.user_type === "admin") {
-      const query = await prisma.report.findMany({
-        take: 10,
-        skip: 10 * skip,
-      });
-      return query;
-    }
-    return 2;
+    const query = await prisma.report.findMany({
+      take: 10,
+      skip: 10 * skip,
+    });
+    return query;
   } catch (e) {
     return null;
   }
 };
 
-const deleteReport = async (id, token) => {
+const deleteReport = async (id) => {
   try {
-    const tokenVerif = jwt.verify(token, process.env.TOKEN);
-
-    if (tokenVerif.user_type === "admin") {
-      await prisma.report.delete({
-        where: {
-          id,
-        },
-      });
-      return 1;
-    }
-    return 2;
+    await prisma.report.delete({
+      where: {
+        id,
+      },
+    });
+    return 1;
   } catch (e) {
     return 0;
   }
 };
 
-module.exports = { addReport, getReportById, deleteReport, getAllReports };
+export default { addReport, getReportById, deleteReport, getAllReports };

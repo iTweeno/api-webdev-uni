@@ -1,6 +1,4 @@
-const prisma = require("./utils/prisma_utils");
-
-const startExpressInstance = require("./utils/express_utils");
+import { startExpressInstance } from "./utils/express_utils.js";
 
 (async () => {
   try {
@@ -10,6 +8,4 @@ const startExpressInstance = require("./utils/express_utils");
     console.log("Error Starting the API");
     console.error(e);
   }
-})().finally(async () => {
-  await prisma.$disconnect();
-});
+})();
