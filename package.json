@@ -4,7 +4,8 @@
   "scripts": {
     "dev": "node -r dotenv/config .",
     "prod": "node .",
-    "test": "jest"
+    "test": "jest",
+    "lint": "eslint ./src --ext .js --fix"
   },
   "dependencies": {
     "@prisma/client": "^3.5.0",

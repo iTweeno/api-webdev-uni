@@ -24,7 +24,7 @@ const startExpressInstance = async () => {
   routeReport(app);
 
   app.listen(6000, () => {
-    console.log("Server listening on port 420");
+    console.log("Server listening on port 6000");
   });
   return app;
 };

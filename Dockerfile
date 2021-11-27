@@ -6,7 +6,7 @@ WORKDIR /app
 
 #dependencies
 COPY . .
-RUN yarn install --production --frozen-lockfile --ignore-scripts
+RUN yarn install --production --frozen-lockfile
 RUN yarn prisma generate
 EXPOSE 6000
 
