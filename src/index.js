@@ -1,4 +1,4 @@
-import { startExpressInstance } from "./utils/express_utils.js";
+import startExpressInstance from "./utils/express_utils.js";
 
 (async () => {
   try {

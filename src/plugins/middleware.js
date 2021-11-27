@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 
 const isUserAuthorizedOrAdmin = (token, id) => {
-  const tokenVerif = verify(token, process.env.TOKEN);
+  const tokenVerif = jwt.verify(token, process.env.TOKEN);
 
   if (tokenVerif?.user_id === id || tokenVerif?.user_type === "admin") {
     return true;

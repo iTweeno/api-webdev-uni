@@ -29,4 +29,4 @@ const startExpressInstance = async () => {
   return app;
 };
 
-export { startExpressInstance };
+export default startExpressInstance;

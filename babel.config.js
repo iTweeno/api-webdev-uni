@@ -1,1 +1,1 @@
-export const presets = ['next/babel'];
+export default ["next/babel"];
