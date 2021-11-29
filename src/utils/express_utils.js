@@ -4,6 +4,8 @@ import cookieParser from "cookie-parser";
 
 import bodyParser from "body-parser";
 
+import cors from "cors";
+
 import routeUser from "../routes/user_routes.js";
 
 import routeAd from "../routes/ad_routes.js";
@@ -14,7 +16,7 @@ import routeReport from "../routes/report_routes.js";
 
 const startExpressInstance = async () => {
   const app = express();
-
+  app.use(cors());
   app.use(bodyParser.json());
   app.use(cookieParser());
 
@@ -23,8 +25,8 @@ const startExpressInstance = async () => {
   routeMessage(app);
   routeReport(app);
 
-  app.listen(6000, () => {
-    console.log("Server listening on port 6000");
+  app.listen(8393, () => {
+    console.log("Server listening on port 8393");
   });
   return app;
 };

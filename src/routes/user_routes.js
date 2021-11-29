@@ -1,4 +1,4 @@
-import { NoContent, Created, BadRequest, Ok, Unauthorized } from "../model/common/model.js";
+import { NoContent, Created, BadRequest, Ok, Unauthorized, NotAcceptable } from "../model/common/model.js";
 
 import userService from "../services/user_service.js";
 
@@ -35,10 +35,10 @@ const routeUser = (app) => {
     return Ok(res, user);
   });
 
-  app.get("/api/user/login", async (req, res) => {
-    const token = await userService.login(req.query.email, req.query.password);
+  app.post("/api/user/login", async (req, res) => {
+    const token = await userService.login(req.body.email, req.body.password);
 
-    if (token == null) return NoContent(res);
+    if (token == null) return NotAcceptable(res, "Username or password is incorrect");
 
     res.cookie("login_token", token);
 

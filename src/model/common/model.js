@@ -13,7 +13,17 @@ const NoContent = (res) => {
 };
 
 const BadRequest = (res) => {
-  return res.status(400).json();
+  return res.status(400).json({
+    code: 400,
+    message: "git gud",
+  });
+};
+
+const NotAcceptable = (res, message) => {
+  return res.status(406).json({
+    code: 406,
+    message,
+  });
 };
 
 const InternalServerError = (res) => {
@@ -24,4 +34,4 @@ const Unauthorized = (res) => {
   return res.status(401).json();
 };
 
-export { Created, Ok, NoContent, BadRequest, InternalServerError, Unauthorized };
+export { Created, Ok, NoContent, BadRequest, InternalServerError, Unauthorized, NotAcceptable };
