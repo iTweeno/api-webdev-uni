@@ -6,7 +6,7 @@ import { isUserAuthorizedOrAdmin, isUserAdmin } from "../plugins/middleware.js";
 
 const routeMessage = (app) => {
   app.post("/api/message", async (req, res) => {
-    const authorized = isUserAuthorizedOrAdmin(req.cookie.login_token, req.body.messenger);
+    const authorized = isUserAuthorizedOrAdmin(req.cookies.access_token, req.body.messenger, res);
 
     if (!authorized) {
       return Unauthorized(res);
@@ -20,7 +20,7 @@ const routeMessage = (app) => {
   });
 
   app.patch("/api/message", async (req, res) => {
-    const authorized = isUserAdmin(req.cookie.login_token, req.body.messenger);
+    const authorized = isUserAdmin(req.cookies.access_token, req.body.messenger, res);
 
     if (!authorized) {
       return Unauthorized(res);
@@ -34,7 +34,7 @@ const routeMessage = (app) => {
   });
 
   app.get("/api/message", async (req, res) => {
-    const authorized = isUserAuthorizedOrAdmin(req.cookie.login_token, req.query.id);
+    const authorized = isUserAuthorizedOrAdmin(req.cookies.access_token, req.query.id, res);
 
     if (!authorized) {
       return Unauthorized(res);
@@ -48,7 +48,7 @@ const routeMessage = (app) => {
   });
 
   app.get("/api/message/allMessages", async (req, res) => {
-    const authorized = isUserAuthorizedOrAdmin(req.cookie.login_token, req.query.id);
+    const authorized = isUserAuthorizedOrAdmin(req.cookies.access_token, req.query.id, res);
 
     if (!authorized) {
       return Unauthorized(res);
@@ -62,13 +62,13 @@ const routeMessage = (app) => {
   });
 
   app.delete("/api/message", async (req, res) => {
-    const authorized = isUserAdmin(req.cookie.login_token, req.body.user_reporting);
+    const authorized = isUserAdmin(req.cookies.access_token, req.body.user_reporting, res);
 
     if (!authorized) {
       return Unauthorized(res);
     }
 
-    const deleted = await messageService.deleteMessage(req.query.id, res.cookie.login_token);
+    const deleted = await messageService.deleteMessage(req.query.id);
 
     if (!deleted) return NoContent(res);
 

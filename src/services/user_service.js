@@ -1,5 +1,7 @@
 import userConnector from "../connector/user_connector.js";
 
+import { getTokenId } from "../plugins/middleware.js";
+
 const addUser = async (body) => {
   const inserted = await userConnector.addUser(body);
 
@@ -12,11 +14,14 @@ const editUser = async (id, body) => {
   return edited === 1;
 };
 
-const getUser = async (query) => {
+const getUser = async (id, cookies) => {
   let user = null;
 
-  if (query.id != null) {
-    user = await userConnector.getUser(query);
+  if (id != null) {
+    user = await userConnector.getUser(id);
+  } else if (cookies.access_token != null) {
+    const idFromToken = getTokenId(cookies.access_token);
+    user = await userConnector.getUser(idFromToken);
   }
 
   return user;
@@ -24,6 +29,7 @@ const getUser = async (query) => {
 
 const login = async (email, password) => {
   let token = null;
+
   if (email != null && password != null) {
     token = await userConnector.login(email, password);
   }

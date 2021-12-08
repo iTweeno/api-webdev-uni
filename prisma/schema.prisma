@@ -9,7 +9,6 @@ datasource db {
 
 model ad {
   id                      String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  type                    String?   @db.VarChar(255)
   salary                  Int
   currency                String    @db.VarChar(255)
   last_time_updated       DateTime  @db.Date
@@ -17,9 +16,9 @@ model ad {
   description             String    @db.VarChar(255)
   title                   String    @db.VarChar(255)
   owner                   String    @db.Uuid
-  category                Int
   location                String    @db.VarChar(255)
   premium_until           DateTime? @db.Date
+  userr                   userr     @relation(fields: [owner], references: [id], onDelete: NoAction, onUpdate: NoAction)
   message                 message[]
   report                  report[]
 }
@@ -37,14 +36,16 @@ model image {
 }
 
 model message {
-  id              String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  ad_id           String   @db.Uuid
-  messenger       String   @db.Uuid
-  receiver        String   @db.Uuid
-  message_content String   @db.VarChar(255)
-  sent_at         DateTime @db.Date
-  edited          Boolean
-  ad              ad       @relation(fields: [ad_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id                             String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  ad_id                          String   @db.Uuid
+  messenger                      String   @db.Uuid
+  receiver                       String   @db.Uuid
+  message_content                String   @db.VarChar(255)
+  sent_at                        DateTime @db.Date
+  edited                         Boolean
+  ad                             ad       @relation(fields: [ad_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  userr_message_messengerTouserr userr    @relation("message_messengerTouserr", fields: [messenger], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  userr_message_receiverTouserr  userr    @relation("message_receiverTouserr", fields: [receiver], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model report {
@@ -53,18 +54,23 @@ model report {
   ad_id           String @db.Uuid
   message_content String @db.VarChar(255)
   ad              ad     @relation(fields: [ad_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  userr           userr  @relation(fields: [user_reporting], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model userr {
-  id              String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  first_name      String   @db.VarChar(255)
-  last_name       String   @db.VarChar(255)
-  password        String   @db.VarChar(255)
-  phone_number    String   @db.VarChar(255)
-  email           String   @unique @db.VarChar(255)
-  birthday        DateTime @db.Date
-  join_date       DateTime @db.Date
-  company         String   @db.VarChar(255)
-  profile_picture String   @db.VarChar(255)
-  user_type       String   @db.VarChar(255)
+  id                               String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  first_name                       String    @db.VarChar(255)
+  last_name                        String    @db.VarChar(255)
+  password                         String    @db.VarChar(255)
+  phone_number                     String    @db.VarChar(255)
+  email                            String    @unique @db.VarChar(255)
+  birthday                         DateTime  @db.Date
+  join_date                        DateTime  @db.Date
+  company                          String    @db.VarChar(255)
+  profile_picture                  String?   @db.VarChar(255)
+  user_type                        String    @db.VarChar(255)
+  ad                               ad[]
+  message_message_messengerTouserr message[] @relation("message_messengerTouserr")
+  message_message_receiverTouserr  message[] @relation("message_receiverTouserr")
+  report                           report[]
 }

@@ -1,9 +1,17 @@
+import { getTokenId } from "../plugins/middleware.js";
+
 import adConnector from "../connector/ad_connector.js";
 
-const addAd = async (body) => {
-  const inserted = await adConnector.addAd(body);
+const addAd = async (body, cookies) => {
+  if (cookies.access_token != null) {
+    const bodyParam = body;
+    const idFromToken = getTokenId(cookies.access_token);
+    bodyParam.id = idFromToken;
+    const inserted = await adConnector.addAd(bodyParam);
 
-  return inserted === 1;
+    return inserted === 1;
+  }
+  return false;
 };
 
 const editAd = async (id, body) => {

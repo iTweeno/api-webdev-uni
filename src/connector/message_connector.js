@@ -1,9 +1,12 @@
 import prisma from "../utils/prisma_utils.js";
 
 const addMessage = async (body) => {
+  const bodyToCreate = body;
+  bodyToCreate.sent_at = new Date(Date.now());
+  bodyToCreate.edited = false;
   try {
     await prisma.message.create({
-      data: body,
+      data: bodyToCreate,
     });
     return 1;
   } catch (e) {
@@ -12,12 +15,15 @@ const addMessage = async (body) => {
 };
 
 const editMessage = async (id, body) => {
+  const bodyToCreate = body;
+  bodyToCreate.sent_at = new Date(Date.now());
+  bodyToCreate.edited = false;
   try {
     await prisma.message.update({
       where: {
         id,
       },
-      data: body,
+      data: bodyToCreate,
     });
     return 1;
   } catch (e) {

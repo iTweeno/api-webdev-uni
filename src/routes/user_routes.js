@@ -2,7 +2,7 @@ import { NoContent, Created, BadRequest, Ok, Unauthorized, NotAcceptable } from 
 
 import userService from "../services/user_service.js";
 
-import { isUserAuthorizedOrAdmin } from "../plugins/middleware.js";
+import { isUserAuthorizedOrAdmin, isTokenValid } from "../plugins/middleware.js";
 
 const routeUser = (app) => {
   app.post("/api/user", async (req, res) => {
@@ -14,7 +14,7 @@ const routeUser = (app) => {
   });
 
   app.patch("/api/user", async (req, res) => {
-    const authorized = isUserAuthorizedOrAdmin(req.cookie.login_token, req.query.id);
+    const authorized = isUserAuthorizedOrAdmin(req.cookies.access_token, req.query.id, res);
 
     if (!authorized) {
       return Unauthorized(res);
@@ -28,7 +28,13 @@ const routeUser = (app) => {
   });
 
   app.get("/api/user", async (req, res) => {
-    const user = await userService.getUser(req.query);
+    const authorized = isTokenValid(req.cookies.access_token, res);
+
+    if (!authorized) {
+      return Unauthorized(res);
+    }
+
+    const user = await userService.getUser(req.query.id, req.cookies);
 
     if (user == null) return NoContent(res);
 
@@ -40,19 +46,32 @@ const routeUser = (app) => {
 
     if (token == null) return NotAcceptable(res, "Username or password is incorrect");
 
-    res.cookie("login_token", token);
+    res.cookie("access_token", token, {
+      expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
+      secure: true,
+      sameSite: "None",
+    });
 
-    return Ok(res, "Logged in");
+    return NoContent(res);
+  });
+
+  app.post("/api/user/logout", async (req, res) => {
+    res.clearCookie("access_token", {
+      secure: true,
+      sameSite: "None",
+    });
+
+    return NoContent(res);
   });
 
   app.delete("/api/user", async (req, res) => {
-    const authorized = isUserAuthorizedOrAdmin(req.cookie.login_token, req.query.id);
+    const authorized = isUserAuthorizedOrAdmin(req.cookies.access_token, req.query.id, res);
 
     if (!authorized) {
       return Unauthorized(res);
     }
 
-    const deleted = await userService.deleteUser(req.query.id, req.cookies.login_token);
+    const deleted = await userService.deleteUser(req.query.id, req.cookies.access_token);
 
     if (!deleted) return NoContent(res);
 

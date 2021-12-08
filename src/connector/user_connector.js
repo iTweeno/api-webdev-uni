@@ -8,7 +8,7 @@ const addUser = async (body) => {
   const userToInsert = body;
   try {
     userToInsert.birthday = new Date(body.birthday);
-    userToInsert.join_date = new Date(body.join_date);
+    userToInsert.join_date = new Date();
     userToInsert.user_type = "basic";
 
     const salt = await genSalt(10);
@@ -46,13 +46,13 @@ const editUser = async (id, body) => {
 const getUser = async (query) => {
   try {
     const queryDb = await prisma.userr.findFirst({
-      where: query,
+      where: {
+        id: query,
+      },
     });
-    console.log(query);
     delete queryDb.password;
     return queryDb;
   } catch (e) {
-    console.log(e);
     return null;
   }
 };
@@ -65,7 +65,6 @@ const login = async (email, password) => {
       },
     });
     const validPassword = await compare(password, queryDb.password);
-
     if (validPassword) {
       const token = jwt.sign({ user_id: queryDb.id, user_type: queryDb.user_type }, process.env.TOKEN, {
         expiresIn: "30d",

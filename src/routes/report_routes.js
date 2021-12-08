@@ -6,13 +6,13 @@ import { isUserAuthorizedOrAdmin, isUserAdmin } from "../plugins/middleware.js";
 
 const routeReport = (app) => {
   app.post("/api/report", async (req, res) => {
-    const authorized = isUserAuthorizedOrAdmin(req.cookie.login_token, req.body.user_reporting);
+    const authorized = isUserAuthorizedOrAdmin(req.cookies.access_token, req.body.user_reporting, res);
 
     if (!authorized) {
       return Unauthorized(res);
     }
 
-    const inserted = await reportService.addReport(req.body, req.cookie.login_token);
+    const inserted = await reportService.addReport(req.body);
 
     if (!inserted) return BadRequest(res);
 
@@ -20,13 +20,13 @@ const routeReport = (app) => {
   });
 
   app.get("/api/report", async (req, res) => {
-    const authorized = isUserAdmin(req.cookie.login_token, req.query.id);
+    const authorized = isUserAdmin(req.cookies.access_token, req.query.id, res);
 
     if (!authorized) {
       return Unauthorized(res);
     }
 
-    const report = await reportService.getReports(req.query, req.cookie.login_token);
+    const report = await reportService.getReports(req.query);
 
     if (report == null || report.length === 0) return NoContent(res);
 
@@ -34,13 +34,13 @@ const routeReport = (app) => {
   });
 
   app.delete("/api/report", async (req, res) => {
-    const authorized = isUserAdmin(req.cookie.login_token, req.query.id);
+    const authorized = isUserAdmin(req.cookies.access_token, req.query.id, res);
 
     if (!authorized) {
       return Unauthorized(res);
     }
 
-    const deleted = await reportService.deleteReport(req.query.id, req.cookie.login_token);
+    const deleted = await reportService.deleteReport(req.query.id);
 
     if (!deleted) return NoContent(res);
 

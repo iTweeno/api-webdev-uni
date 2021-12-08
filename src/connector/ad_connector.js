@@ -1,14 +1,19 @@
 import prisma from "../utils/prisma_utils.js";
 
 const addAd = async (body) => {
-  const adToEdit = body;
+  const adtoAdd = body;
   try {
-    adToEdit.last_time_updated = new Date(body.last_time_updated);
+    adtoAdd.last_time_updated = new Date(Date.now());
+    adtoAdd.amount_of_times_visited = 0;
+    adtoAdd.premium_until = null;
+    adtoAdd.salary = Number(adtoAdd.salary);
     await prisma.ad.create({
-      data: adToEdit,
+      data: adtoAdd,
     });
     return 1;
   } catch (e) {
+    console.log(adtoAdd);
+    console.log(e);
     return 0;
   }
 };
@@ -16,7 +21,7 @@ const addAd = async (body) => {
 const editAd = async (id, body) => {
   const adToEdit = body;
   try {
-    adToEdit.last_time_updated = new Date(body.last_time_updated);
+    adToEdit.last_time_updated = new Date(Date.now());
 
     await prisma.ad.update({
       where: {
@@ -45,15 +50,11 @@ const getAdById = async (id) => {
 
 const getAdsByTitle = async (title, skip) => {
   try {
-    const query = await prisma.ad.findMany({
-      where: {
-        title: {
-          contains: title,
-        },
-      },
-      take: 10,
-      skip: 10 * skip,
-    });
+    // const query = await prisma.$queryRaw`SELECT * FROM ad WHERE LOWER(title) LIKE LOWER('%${title}%') OFFSET ${skip} LIMIT 10;`;http://hockeyweb.site/daily/news/benfica03/?sport=soccer
+    const query = (await prisma.ad.findMany())
+      .filter((e) => e.title.toLowerCase().includes(title.toLowerCase()))
+      .slice(skip, skip + 10);
+
     return query;
   } catch (e) {
     return null;

@@ -8,7 +8,7 @@ import prisma from "../utils/prisma_utils.js";
 
 const routeAd = (app) => {
   app.post("/api/ad", async (req, res) => {
-    const inserted = await adService.addAd(req.body);
+    const inserted = await adService.addAd(req.body, req.cookies);
 
     if (!inserted) return BadRequest(res);
 
@@ -20,7 +20,7 @@ const routeAd = (app) => {
       where: req.query.id,
     });
 
-    const authorized = isUserAuthorizedOrAdmin(req.cookie.login_token, ad.messenger);
+    const authorized = isUserAuthorizedOrAdmin(req.cookie.access_token, ad.messenger);
 
     if (!authorized) {
       return Unauthorized(res);
@@ -34,7 +34,7 @@ const routeAd = (app) => {
   });
 
   app.get("/api/ad", async (req, res) => {
-    const ad = await adService.getAd(req.body);
+    const ad = await adService.getAd(req.query);
 
     if (ad == null || ad.length === 0) return NoContent(res);
 
@@ -46,7 +46,7 @@ const routeAd = (app) => {
       where: req.query.id,
     });
 
-    const authorized = isUserAuthorizedOrAdmin(req.cookie.login_token, ad.messenger);
+    const authorized = isUserAuthorizedOrAdmin(req.cookie.access_token, ad.messenger);
 
     if (!authorized) {
       return Unauthorized(res);
