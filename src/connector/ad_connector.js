@@ -50,10 +50,16 @@ const getAdById = async (id) => {
 
 const getAdsByTitle = async (title, skip) => {
   try {
-    // const query = await prisma.$queryRaw`SELECT * FROM ad WHERE LOWER(title) LIKE LOWER('%${title}%') OFFSET ${skip} LIMIT 10;`;http://hockeyweb.site/daily/news/benfica03/?sport=soccer PRISMA RAW QUERIES REFUSE TO WORK I KNOW THIS IS HORRIBLE
-    const query = (await prisma.ad.findMany())
-      .filter((e) => e.title.toLowerCase().includes(title.toLowerCase()))
-      .slice(skip, skip + 10);
+    const query = await prisma.ad.findMany({
+      where: {
+        title: {
+          contains: title,
+          mode: "insensitive",
+        },
+      },
+      skip: Number(skip),
+      take: 10,
+    });
 
     return query;
   } catch (e) {
@@ -63,7 +69,7 @@ const getAdsByTitle = async (title, skip) => {
 
 const getAdsByOwner = async (ownerId) => {
   try {
-    const query = await prisma.ad.findFirst({
+    const query = await prisma.ad.findMany({
       where: {
         owner_id: ownerId,
       },

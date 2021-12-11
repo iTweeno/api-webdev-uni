@@ -57,9 +57,18 @@ const getMessagesByPersonId = async (id) => {
           },
         ],
       },
+      include: {
+        userr_message_messengerTouserr: true,
+        userr_message_receiverTouserr: true,
+      },
+    });
+    query.forEach((e) => {
+      delete e.userr_message_messengerTouserr.password;
+      delete e.userr_message_receiverTouserr.password;
     });
     return query;
   } catch (e) {
+    console.log(e);
     return null;
   }
 };
