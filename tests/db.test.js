@@ -7,15 +7,12 @@ it("Find User", async () => {
     id: 1,
   };
 
-  let user = mocked_db.user.find((e) => e.id === 1);
+  let user = mocked_db.user.find((e) => e.id === user_details.id);
 
   expect(user.first_name).toBe("Joao");
 });
 
 it("Insert user", async () => {
-  let user_details = {
-    id: 1,
-  };
 
   let user = { id: 2, first_name: "Andre", last_name: "Ferreira" };
 

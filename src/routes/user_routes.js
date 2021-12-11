@@ -1,8 +1,8 @@
-import { NoContent, Created, BadRequest, Ok, Unauthorized, NotAcceptable } from "../model/common/model.js";
+import { NoContent, Created, BadRequest, Ok, NotAcceptable } from "../model/common/model.js";
 
 import userService from "../services/user_service.js";
 
-import { isUserAuthorizedOrAdmin, isTokenValid } from "../plugins/middleware.js";
+import { isUserAuthorizedOrAdmin, isTokenValid } from "../middleware/jwt.js";
 
 const routeUser = (app) => {
   app.post("/api/user", async (req, res) => {
@@ -13,13 +13,7 @@ const routeUser = (app) => {
     return Created(res);
   });
 
-  app.patch("/api/user", async (req, res) => {
-    const authorized = isUserAuthorizedOrAdmin(req.cookies.access_token, req.query.id, res);
-
-    if (!authorized) {
-      return Unauthorized(res);
-    }
-
+  app.patch("/api/user", isUserAuthorizedOrAdmin("req.query.id"), async (req, res) => {
     const edited = await userService.editUser(req.query.id, req.body);
 
     if (!edited) return BadRequest(res);
@@ -27,13 +21,7 @@ const routeUser = (app) => {
     return Ok(res, req.body);
   });
 
-  app.get("/api/user", async (req, res) => {
-    const authorized = isTokenValid(req.cookies.access_token, res);
-
-    if (!authorized) {
-      return Unauthorized(res);
-    }
-
+  app.get("/api/user", isTokenValid, async (req, res) => {
     const user = await userService.getUser(req.query.id, req.cookies);
 
     if (user == null) return NoContent(res);
@@ -64,13 +52,7 @@ const routeUser = (app) => {
     return NoContent(res);
   });
 
-  app.delete("/api/user", async (req, res) => {
-    const authorized = isUserAuthorizedOrAdmin(req.cookies.access_token, req.query.id, res);
-
-    if (!authorized) {
-      return Unauthorized(res);
-    }
-
+  app.delete("/api/user", isUserAuthorizedOrAdmin("req.query.id"), async (req, res) => {
     const deleted = await userService.deleteUser(req.query.id, req.cookies.access_token);
 
     if (!deleted) return NoContent(res);

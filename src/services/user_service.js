@@ -1,6 +1,6 @@
 import userConnector from "../connector/user_connector.js";
 
-import { getTokenId } from "../plugins/middleware.js";
+import { getTokenId } from "../middleware/jwt.js";
 
 const addUser = async (body) => {
   const inserted = await userConnector.addUser(body);

@@ -1,4 +1,4 @@
-import { getTokenId } from "../plugins/middleware.js";
+import { getTokenId } from "../middleware/jwt.js";
 
 import adConnector from "../connector/ad_connector.js";
 
@@ -26,10 +26,11 @@ const getAd = async (query) => {
     ad = await adConnector.getAdById(query.id);
   } else if (query?.title != null && query?.skip != null) {
     ad = await adConnector.getAdsByTitle(query.title, query.skip);
+  } else if (query?.owner != null) {
+    ad = await adConnector.getAdsByOwner(query.owner);
   } else {
-    return null;
+    ad = null;
   }
-
   return ad;
 };
 

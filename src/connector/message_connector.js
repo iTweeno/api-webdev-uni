@@ -50,8 +50,10 @@ const getMessagesByPersonId = async (id) => {
       where: {
         OR: [
           {
-            messenger: id,
             receiver: id,
+          },
+          {
+            messenger: id,
           },
         ],
       },

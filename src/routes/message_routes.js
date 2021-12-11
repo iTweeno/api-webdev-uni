@@ -1,17 +1,11 @@
-import { NoContent, Created, BadRequest, Ok, Unauthorized } from "../model/common/model.js";
+import { NoContent, Created, BadRequest, Ok } from "../model/common/model.js";
 
 import messageService from "../services/message_service.js";
 
-import { isUserAuthorizedOrAdmin, isUserAdmin } from "../plugins/middleware.js";
+import { isUserAuthorizedOrAdminInArray, isUserAuthorizedOrAdmin, isUserAdmin } from "../middleware/jwt.js";
 
 const routeMessage = (app) => {
-  app.post("/api/message", async (req, res) => {
-    const authorized = isUserAuthorizedOrAdmin(req.cookies.access_token, req.body.messenger, res);
-
-    if (!authorized) {
-      return Unauthorized(res);
-    }
-
+  app.post("/api/message", isUserAuthorizedOrAdminInArray, async (req, res) => {
     const inserted = await messageService.addMessage(req.body);
 
     if (!inserted) return BadRequest(res);
@@ -19,13 +13,7 @@ const routeMessage = (app) => {
     return Created(res);
   });
 
-  app.patch("/api/message", async (req, res) => {
-    const authorized = isUserAdmin(req.cookies.access_token, req.body.messenger, res);
-
-    if (!authorized) {
-      return Unauthorized(res);
-    }
-
+  app.patch("/api/message", isUserAdmin, async (req, res) => {
     const edited = await messageService.editMessage(req.query.id, req.body);
 
     if (!edited) return BadRequest(res);
@@ -33,13 +21,7 @@ const routeMessage = (app) => {
     return Ok(res, req.body);
   });
 
-  app.get("/api/message", async (req, res) => {
-    const authorized = isUserAuthorizedOrAdmin(req.cookies.access_token, req.query.id, res);
-
-    if (!authorized) {
-      return Unauthorized(res);
-    }
-
+  app.get("/api/message", isUserAuthorizedOrAdmin("req.query.id"), async (req, res) => {
     const message = await messageService.getMessageById(req.query.id);
 
     if (message == null) return NoContent(res);
@@ -47,13 +29,7 @@ const routeMessage = (app) => {
     return Ok(res, message);
   });
 
-  app.get("/api/message/allMessages", async (req, res) => {
-    const authorized = isUserAuthorizedOrAdmin(req.cookies.access_token, req.query.id, res);
-
-    if (!authorized) {
-      return Unauthorized(res);
-    }
-
+  app.get("/api/message/allMessages", isUserAuthorizedOrAdmin("req.query.id"), async (req, res) => {
     const message = await messageService.getMessagesByPersonId(req.query.id);
 
     if (message == null || message.length === 0) return NoContent(res);
@@ -61,13 +37,7 @@ const routeMessage = (app) => {
     return Ok(res, message);
   });
 
-  app.delete("/api/message", async (req, res) => {
-    const authorized = isUserAdmin(req.cookies.access_token, req.body.user_reporting, res);
-
-    if (!authorized) {
-      return Unauthorized(res);
-    }
-
+  app.delete("/api/message", isUserAdmin, async (req, res) => {
     const deleted = await messageService.deleteMessage(req.query.id);
 
     if (!deleted) return NoContent(res);

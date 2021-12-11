@@ -28,7 +28,17 @@ const editUser = async (id, body) => {
   try {
     userToEdit.birthday = new Date(body.birthday);
     userToEdit.join_date = new Date(body.join_date);
-    userToEdit.user_type = "basic";
+    const user = await prisma.userr.findFirst({
+      where: {
+        id,
+      },
+      data: userToEdit,
+    });
+
+    if (user.user_type === "basic") {
+      userToEdit.user_type = "basic";
+    }
+
     if (userToEdit.password != null) delete userToEdit.password;
 
     await prisma.userr.update({

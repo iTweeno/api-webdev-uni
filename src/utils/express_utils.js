@@ -44,8 +44,9 @@ const startExpressInstance = async () => {
   https
     .createServer(
       {
-        key: fs.readFileSync(path.join(process.cwd(), "ssl/ssl.key")),
-        cert: fs.readFileSync(path.join(process.cwd(), "ssl/ssl.cert")),
+        key: fs.readFileSync(path.join(process.cwd(), "ssl/key.pem")),
+        cert: fs.readFileSync(path.join(process.cwd(), "ssl/cert.pem")),
+        passphrase: "aaaa",
       },
       app
     )
