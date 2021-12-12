@@ -41,6 +41,9 @@ const getAdById = async (id) => {
       where: {
         id,
       },
+      include: {
+        userr: true,
+      },
     });
     return query;
   } catch (e) {
@@ -59,6 +62,9 @@ const getAdsByTitle = async (title, skip) => {
       },
       skip: Number(skip),
       take: 10,
+      include: {
+        userr: true,
+      },
     });
 
     return query;

@@ -26,14 +26,14 @@ const addUser = async (body) => {
 const editUser = async (id, body) => {
   const userToEdit = body;
   try {
+    console.log(userToEdit);
     userToEdit.birthday = new Date(body.birthday);
-    userToEdit.join_date = new Date(body.join_date);
     const user = await prisma.userr.findFirst({
       where: {
         id,
       },
-      data: userToEdit,
     });
+    userToEdit.join_date = new Date(user.join_date);
 
     if (user.user_type === "basic") {
       userToEdit.user_type = "basic";

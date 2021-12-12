@@ -18,9 +18,13 @@ const getMessageById = async (id) => {
   return message;
 };
 
-const getMessagesByPersonId = async (id) => {
-  const message = await messageConnector.getMessagesByPersonId(id);
-
+const getMessagesByPersonId = async (query) => {
+  let message = null;
+  if (query.otherid != null && query.adId != null) {
+    message = await messageConnector.getMessagesByPeopleIds(query.id, query.otherid);
+  } else if (query.id != null) {
+    message = await messageConnector.getMessagesByPersonId(query.id);
+  }
   return message;
 };
 

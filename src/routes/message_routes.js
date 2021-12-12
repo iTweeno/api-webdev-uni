@@ -30,7 +30,7 @@ const routeMessage = (app) => {
   });
 
   app.get("/api/message/allMessages", isUserAuthorizedOrAdmin("req.query.id"), async (req, res) => {
-    const message = await messageService.getMessagesByPersonId(req.query.id);
+    const message = await messageService.getMessagesByPersonId(req.query);
 
     if (message == null || message.length === 0) return NoContent(res);
 

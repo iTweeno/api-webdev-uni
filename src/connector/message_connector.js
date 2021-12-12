@@ -17,7 +17,7 @@ const addMessage = async (body) => {
 const editMessage = async (id, body) => {
   const bodyToCreate = body;
   bodyToCreate.sent_at = new Date(Date.now());
-  bodyToCreate.edited = false;
+  bodyToCreate.edited = true;
   try {
     await prisma.message.update({
       where: {
@@ -73,6 +73,38 @@ const getMessagesByPersonId = async (id) => {
   }
 };
 
+const getMessagesByPeopleIds = async (id, otherId, adId) => {
+  try {
+    const query = await prisma.message.findMany({
+      where: {
+        OR: [
+          {
+            ad_id: adId,
+            receiver: id,
+            messenger: otherId,
+          },
+          {
+            ad_id: adId,
+            receiver: otherId,
+            messenger: id,
+          },
+        ],
+      },
+      include: {
+        userr_message_messengerTouserr: true,
+        userr_message_receiverTouserr: true,
+      },
+    });
+    query.forEach((e) => {
+      delete e.userr_message_messengerTouserr.password;
+      delete e.userr_message_receiverTouserr.password;
+    });
+    return query;
+  } catch (e) {
+    return null;
+  }
+};
+
 const deleteMessage = async (id) => {
   try {
     await prisma.message.delete({
@@ -86,4 +118,11 @@ const deleteMessage = async (id) => {
   }
 };
 
-export default { addMessage, editMessage, getMessageById, deleteMessage, getMessagesByPersonId };
+export default {
+  addMessage,
+  editMessage,
+  getMessageById,
+  deleteMessage,
+  getMessagesByPersonId,
+  getMessagesByPeopleIds,
+};
