@@ -12,8 +12,6 @@ const addAd = async (body) => {
     });
     return 1;
   } catch (e) {
-    console.log(adtoAdd);
-    console.log(e);
     return 0;
   }
 };
@@ -53,6 +51,14 @@ const getAdById = async (id) => {
 
 const getAdsByTitle = async (title, skip) => {
   try {
+    const count = await prisma.ad.findMany({
+      where: {
+        title: {
+          contains: title,
+          mode: "insensitive",
+        },
+      },
+    });
     const query = await prisma.ad.findMany({
       where: {
         title: {
@@ -60,14 +66,20 @@ const getAdsByTitle = async (title, skip) => {
           mode: "insensitive",
         },
       },
-      skip: Number(skip),
+      skip: Number(skip * 10),
       take: 10,
       include: {
         userr: true,
       },
+      orderBy: {
+        premium_until: "desc",
+      },
     });
-
-    return query;
+    const queryData = {
+      count: count.length,
+      data: query,
+    };
+    return queryData;
   } catch (e) {
     return null;
   }

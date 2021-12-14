@@ -26,7 +26,6 @@ const addUser = async (body) => {
 const editUser = async (id, body) => {
   const userToEdit = body;
   try {
-    console.log(userToEdit);
     userToEdit.birthday = new Date(body.birthday);
     const user = await prisma.userr.findFirst({
       where: {

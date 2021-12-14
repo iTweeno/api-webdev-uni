@@ -24,7 +24,13 @@ const routeAd = (app) => {
   app.get("/api/ad", async (req, res) => {
     const ad = await adService.getAd(req.query);
 
-    if (ad == null || ad.length === 0) return NoContent(res);
+    if (ad == null) return NoContent(res);
+
+    if (ad.data != null) {
+      if (ad.data.length === 0 && ad.count === 0) {
+        return NoContent(res);
+      }
+    }
 
     return Ok(res, ad);
   });
