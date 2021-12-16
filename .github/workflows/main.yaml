@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  lint:
+  lint-and-test:
     name: Run eslint
     runs-on: ubuntu-latest
     container:
@@ -21,28 +21,14 @@ jobs:
         uses: borales/actions-yarn@v2.1.0
         with:
           cmd: lint
-      - name: test
-        uses: borales/actions-yarn@v2.1.0
-        with:
-          cmd: test
-  test:
-    name: Test tests
-    runs-on: ubuntu-latest
-    needs: lint
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install dependencies
-        uses: borales/actions-yarn@v2.1.0
-        with:
-          cmd: install
-      - name: test
+      - name: Tests
         uses: borales/actions-yarn@v2.1.0
         with:
           cmd: test
   build:
     name: Build docker container
     runs-on: ubuntu-latest
-    needs: lint
+    needs: lint-and-test
     steps:
       - uses: actions/checkout@v2
       - name: Login to github docker
