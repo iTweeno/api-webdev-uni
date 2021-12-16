@@ -5,19 +5,20 @@ import { Unauthorized } from "../model/common/model.js";
 import prisma from "../utils/prisma_utils.js";
 
 const isUserAuthorizedOrAdmin = (routeToId) => {
-  return (req, res, next) => {
+  const getId = async (req, res, next) => {
     let id;
     if (routeToId === "req.query.id") {
       id = req.query.id;
     } else if (routeToId === "req.body.user_reporting") {
       id = req.body.user_reporting;
     } else if (routeToId === "ad.owner") {
-      const ad = prisma.ad.findFirst({
-        where: req.query.id,
+      const ad = await prisma.ad.findFirst({
+        where: {
+          id: req.query.id,
+        },
       });
       id = ad.owner;
     }
-
     try {
       if (req.cookies.access_token == null) {
         return Unauthorized(res);
@@ -35,6 +36,7 @@ const isUserAuthorizedOrAdmin = (routeToId) => {
       return Unauthorized(res);
     }
   };
+  return getId;
 };
 
 const isUserAuthorizedOrAdminInArray = (req, res, next) => {

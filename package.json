@@ -3,9 +3,10 @@
   "main": "./src/index.js",
   "scripts": {
     "dev": "node -r dotenv/config .",
-    "prod": "node .",
+    "prod": "node -r dotenv/config .",
     "test": "jest",
-    "lint": "eslint ./src --ext .js --fix"
+    "lint": "eslint ./src --ext .js --fix",
+    "prisma": "prisma db pull && prisma generate"
   },
   "dependencies": {
     "@prisma/client": "^3.6.0",

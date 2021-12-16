@@ -1,13 +1,11 @@
-#Eu FROM node:12.19.0-buster
 FROM node:16-buster
 
-#app dir
 WORKDIR /app
 
-#dependencies
 COPY . .
 RUN yarn install --production --frozen-lockfile
-RUN yarn prisma generate
+RUN yarn config set unsafe-perm true
+RUN yarn global install prisma
 EXPOSE 6000
 
-CMD [ "yarn", "run", "prod"]
+CMD yarn run prisma ; yarn run prod

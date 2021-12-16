@@ -18,21 +18,10 @@ model ad {
   owner                   String    @db.Uuid
   location                String    @db.VarChar(255)
   premium_until           DateTime? @db.Date
+  ad_type                 adtype    @default(paid)
   userr                   userr     @relation(fields: [owner], references: [id], onDelete: NoAction, onUpdate: NoAction)
   message                 message[]
   report                  report[]
-}
-
-model category {
-  id       String  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  number   Int?
-  category String? @db.VarChar(255)
-}
-
-model image {
-  id         String  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  ad_id      String? @db.Uuid
-  image_link String? @db.VarChar(255)
 }
 
 model message {
@@ -68,9 +57,20 @@ model userr {
   join_date                        DateTime  @db.Date
   company                          String    @db.VarChar(255)
   profile_picture                  String?   @db.VarChar(255)
-  user_type                        String    @db.VarChar(255)
+  user_type                        usertype
   ad                               ad[]
   message_message_messengerTouserr message[] @relation("message_messengerTouserr")
   message_message_receiverTouserr  message[] @relation("message_receiverTouserr")
   report                           report[]
+}
+
+enum adtype {
+  paid
+  internship
+  volunteering
+}
+
+enum usertype {
+  basic
+  admin
 }

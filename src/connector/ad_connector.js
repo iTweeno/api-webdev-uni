@@ -18,6 +18,7 @@ const addAd = async (body) => {
 
 const editAd = async (id, body) => {
   const adToEdit = body;
+  adToEdit.salary = Number(adToEdit.salary);
   try {
     adToEdit.last_time_updated = new Date(Date.now());
 
@@ -89,9 +90,10 @@ const getAdsByOwner = async (ownerId) => {
   try {
     const query = await prisma.ad.findMany({
       where: {
-        owner_id: ownerId,
+        owner: ownerId,
       },
     });
+
     return query;
   } catch (e) {
     return null;

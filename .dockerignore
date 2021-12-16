@@ -1,5 +1,7 @@
 **
 !/src/**
 !/prisma/**
+!/ssl/**
 !package.json
 !yarn.lock
+!.env
