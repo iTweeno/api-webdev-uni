@@ -22,6 +22,8 @@ import routeMessage from "../routes/message_routes.js";
 
 import routeReport from "../routes/report_routes.js";
 
+import rateLimit from "../middleware/rateLimit.js";
+
 const startExpressInstance = async () => {
   const app = express();
   app.use(
@@ -30,6 +32,7 @@ const startExpressInstance = async () => {
       origin: `http://localhost:5000`,
     })
   );
+  app.use("/api/ad/incrementNumberOfTimesVisited", rateLimit);
   app.use(bodyParser.json());
   app.use(cookieParser());
   app.use(session({ secret: process.env.TOKEN, cookie: { sameSite: "None", secure: true } }));

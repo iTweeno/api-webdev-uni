@@ -34,10 +34,16 @@ const getAd = async (query) => {
   return ad;
 };
 
+const incrementNumberOfTimesVisited = async (adId) => {
+  const incremented = await adConnector.incrementNumberOfTimesVisited(adId);
+
+  return incremented === 1;
+};
+
 const deleteAd = async (id) => {
   const deleted = await adConnector.deleteAd(id);
 
   return deleted === 1;
 };
 
-export default { addAd, editAd, getAd, deleteAd };
+export default { addAd, editAd, getAd, deleteAd, incrementNumberOfTimesVisited };

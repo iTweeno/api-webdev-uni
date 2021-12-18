@@ -4,9 +4,22 @@
   "scripts": {
     "dev": "node -r dotenv/config .",
     "prod": "node -r dotenv/config .",
-    "test": "jest",
+    "test": "jest --coverage",
     "lint": "eslint ./src --ext .js --fix",
-    "prisma": "prisma db pull && prisma generate"
+    "prisma": "prisma db pull && prisma generate",
+    "sonar": "node sonar-project.js"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ],
+    "testResultsProcessor": "jest-sonar-reporter"
+  },
+  "jestSonar": {
+    "reportPath": "coverage",
+    "reportFile": "test-reporter.xml",
+    "indent": 4
   },
   "dependencies": {
     "@prisma/client": "^3.6.0",
@@ -16,11 +29,14 @@
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
+    "express-rate-limit": "^5.5.1",
     "express-session": "^1.17.2",
     "jsonwebtoken": "^8.5.1",
-    "prisma": "^3.6.0"
+    "prisma": "^3.6.0",
+    "sonarqube-scanner": "^2.8.1"
   },
   "devDependencies": {
+    "jest-sonar-reporter": "^2.0.0",
     "@babel/core": "^7.16.0",
     "babel-jest": "^27.3.1",
     "eslint": "^7.25.0",

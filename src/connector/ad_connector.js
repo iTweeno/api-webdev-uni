@@ -100,6 +100,20 @@ const getAdsByOwner = async (ownerId) => {
   }
 };
 
+const incrementNumberOfTimesVisited = async (adId) => {
+  try {
+    await prisma.ad.update({
+      where: {
+        id: adId,
+      },
+      data: { amount_of_times_visited: { increment: 1 } },
+    });
+    return 1;
+  } catch (e) {
+    return 0;
+  }
+};
+
 const deleteAd = async (id) => {
   try {
     await prisma.ad.delete({
@@ -113,4 +127,4 @@ const deleteAd = async (id) => {
   }
 };
 
-export default { addAd, editAd, getAdById, getAdsByTitle, deleteAd, getAdsByOwner };
+export default { addAd, editAd, getAdById, getAdsByTitle, deleteAd, getAdsByOwner, incrementNumberOfTimesVisited };
