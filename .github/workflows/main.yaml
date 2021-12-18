@@ -7,7 +7,7 @@ on:
 
 jobs:
   lint-and-test:
-    name: Run eslint
+    name: Run eslint and test
     runs-on: ubuntu-latest
     container:
       image: node

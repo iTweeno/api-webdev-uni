@@ -6,6 +6,6 @@ COPY . .
 RUN yarn install --production --frozen-lockfile
 RUN yarn config set unsafe-perm true
 RUN yarn global add prisma
-EXPOSE 6000
+EXPOSE 8393
 
 CMD yarn run prisma ; yarn run prod
