@@ -13,7 +13,7 @@ const routeUser = (app) => {
     return Created(res);
   });
 
-  app.patch("/api/user", isUserAuthorizedOrAdmin("req.query.id"), async (req, res) => {
+  app.patch("/api/user", isUserAuthorizedOrAdmin("req.query.userId"), async (req, res) => {
     const edited = await userService.editUser(req.query.userId, req.body);
 
     if (!edited) return BadRequest(res);
@@ -52,7 +52,7 @@ const routeUser = (app) => {
     return NoContent(res);
   });
 
-  app.delete("/api/user", isUserAuthorizedOrAdmin("req.query.id"), async (req, res) => {
+  app.delete("/api/user", isUserAuthorizedOrAdmin("req.query.userId"), async (req, res) => {
     const deleted = await userService.deleteUser(req.query.userId, req.cookies.access_token);
 
     if (!deleted) return NoContent(res);

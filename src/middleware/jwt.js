@@ -7,8 +7,8 @@ import prisma from "../utils/prisma_utils.js";
 const isUserAuthorizedOrAdmin = (routeToId) => {
   const getId = async (req, res, next) => {
     let id;
-    if (routeToId === "req.query.id") {
-      id = req.query.id;
+    if (routeToId === "req.query.userId") {
+      id = req.query.userId;
     } else if (routeToId === "req.body.user_reporting") {
       id = req.body.user_reporting;
     } else if (routeToId === "ad.owner") {

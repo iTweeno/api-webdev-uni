@@ -5,9 +5,34 @@ import userConnector from "./connector/user_connector.js";
 import messageConnector from "./connector/message_connector.js";
 import reportConnector from "./connector/report_connector.js";
 
+const users = [
+  {
+    id: "e922a1de-b5cf-455f-9474-0da70bee623d",
+    first_name: "David",
+    last_name: "Pinto",
+    password: "a",
+    phone_number: "934575689",
+    email: "b@gmail.com",
+    birthday: "2001-03-29",
+    company: "CTT",
+    profile_picture: "",
+  },
+  {
+    id: "eac2d0a3-5104-484e-8310-2b0da54c4e23",
+    first_name: "Antonio",
+    last_name: "Sousa",
+    password: "c",
+    phone_number: "934575689",
+    email: "d@gmail.com",
+    birthday: "2001-03-29",
+    company: "Globoaldata",
+    profile_picture: "",
+  },
+];
+
 const ads = [
   {
-    id: "3a48ad84-605c-11ec-8607-0242ac130002",
+    id: "3a48ad84-605c-11ec-8607-0242ac130004",
     salary: 2500,
     currency: "€",
     last_time_updated: null,
@@ -48,31 +73,6 @@ const ads = [
   },
 ];
 
-const users = [
-  {
-    id: "e922a1de-b5cf-455f-9474-0da70bee622d",
-    first_name: "David",
-    last_name: "Pinto",
-    password: "a",
-    phone_number: "934575689",
-    email: "b@gmail.com",
-    birthday: "2001-03-29",
-    company: "CTT",
-    profile_picture: "",
-  },
-  {
-    id: "eac2d0a3-5104-484e-8310-2b0da54c4e23",
-    first_name: "Antonio",
-    last_name: "Sousa",
-    password: "c",
-    phone_number: "934575689",
-    email: "d@gmail.com",
-    birthday: "2001-03-29",
-    company: "Globoaldata",
-    profile_picture: "",
-  },
-];
-
 const messages = [
   {
     messenger: "e922a1de-b5cf-455f-9474-0da70bee622d",
@@ -92,11 +92,11 @@ const reports = [
 
 const seedDatabase = async () => {
   const promises = [];
-  ads.forEach((ad) => {
-    promises.push(adConnector.addAd(ad));
-  });
   users.forEach((user) => {
     promises.push(userConnector.addUser(user));
+  });
+  ads.forEach((ad) => {
+    promises.push(adConnector.addAd(ad));
   });
   messages.forEach((message) => {
     promises.push(messageConnector.addMessage(message));

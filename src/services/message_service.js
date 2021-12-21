@@ -20,9 +20,9 @@ const getMessageById = async (id) => {
 
 const getMessagesByPersonId = async (query) => {
   let message = null;
-  if (query.otherid != null && query.adId != null) {
-    message = await messageConnector.getMessagesByPeopleIds(query.adId, query.otherid);
-  } else if (query.id != null) {
+  if (query.otherId != null && query.adId != null && query.userId != null) {
+    message = await messageConnector.getMessagesByPeopleIds(query.adId, query.otherId, query.adId);
+  } else if (query.userId != null) {
     message = await messageConnector.getMessagesByPersonId(query.userId);
   }
   return message;

@@ -21,7 +21,7 @@ const routeMessage = (app) => {
     return Ok(res, req.body);
   });
 
-  app.get("/api/message", isUserAuthorizedOrAdmin("req.query.id"), async (req, res) => {
+  app.get("/api/message", isUserAuthorizedOrAdmin("req.query.userId"), async (req, res) => {
     const message = await messageService.getMessageById(req.query.messageId);
 
     if (message == null) return NoContent(res);
@@ -29,7 +29,7 @@ const routeMessage = (app) => {
     return Ok(res, message);
   });
 
-  app.get("/api/message/allMessages", isUserAuthorizedOrAdmin("req.query.id"), async (req, res) => {
+  app.get("/api/message/allMessages", isUserAuthorizedOrAdmin("req.query.userId"), async (req, res) => {
     const message = await messageService.getMessagesByPersonId(req.query);
 
     if (message == null || message.length === 0) return NoContent(res);
