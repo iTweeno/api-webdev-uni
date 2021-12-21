@@ -14,7 +14,7 @@ const routeAd = (app) => {
   });
 
   app.patch("/api/ad", isUserAuthorizedOrAdmin("ad.owner"), async (req, res) => {
-    const edited = await adService.editAd(req.query.id, req.body);
+    const edited = await adService.editAd(req.query.adId, req.body);
 
     if (!edited) return BadRequest(res);
 
@@ -22,7 +22,7 @@ const routeAd = (app) => {
   });
 
   app.patch("/api/ad/incrementNumberOfTimesVisited", async (req, res) => {
-    const incremented = await adService.incrementNumberOfTimesVisited(req.query.id);
+    const incremented = await adService.incrementNumberOfTimesVisited(req.query.adId);
 
     if (!incremented) return InternalServerError(res);
 
@@ -44,7 +44,7 @@ const routeAd = (app) => {
   });
 
   app.delete("/api/ad", isUserAuthorizedOrAdmin("ad.owner"), async (req, res) => {
-    const deleted = await adService.deleteAd(req.query.id);
+    const deleted = await adService.deleteAd(req.query.adId);
 
     if (!deleted) return NoContent(res);
 

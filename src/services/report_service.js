@@ -9,7 +9,7 @@ const addReport = async (body) => {
 const getReports = async (query) => {
   let reports;
   if (query.id != null) {
-    reports = await reportConnector.getReportById(query.id);
+    reports = await reportConnector.getReportById(query.reportId);
   } else {
     reports = await reportConnector.getAllReports(query.skip);
   }

@@ -21,9 +21,9 @@ const getMessageById = async (id) => {
 const getMessagesByPersonId = async (query) => {
   let message = null;
   if (query.otherid != null && query.adId != null) {
-    message = await messageConnector.getMessagesByPeopleIds(query.id, query.otherid);
+    message = await messageConnector.getMessagesByPeopleIds(query.adId, query.otherid);
   } else if (query.id != null) {
-    message = await messageConnector.getMessagesByPersonId(query.id);
+    message = await messageConnector.getMessagesByPersonId(query.userId);
   }
   return message;
 };

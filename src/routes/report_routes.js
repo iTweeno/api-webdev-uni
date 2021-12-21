@@ -22,7 +22,7 @@ const routeReport = (app) => {
   });
 
   app.delete("/api/report", isUserAdmin, async (req, res) => {
-    const deleted = await reportService.deleteReport(req.query.id);
+    const deleted = await reportService.deleteReport(req.query.reportId);
 
     if (!deleted) return NoContent(res);
 

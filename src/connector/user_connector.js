@@ -83,6 +83,7 @@ const login = async (email, password) => {
   } catch (e) {
     return null;
   }
+
   return null;
 };
 

@@ -14,7 +14,7 @@ const routeUser = (app) => {
   });
 
   app.patch("/api/user", isUserAuthorizedOrAdmin("req.query.id"), async (req, res) => {
-    const edited = await userService.editUser(req.query.id, req.body);
+    const edited = await userService.editUser(req.query.userId, req.body);
 
     if (!edited) return BadRequest(res);
 
@@ -22,7 +22,7 @@ const routeUser = (app) => {
   });
 
   app.get("/api/user", isTokenValid, async (req, res) => {
-    const user = await userService.getUser(req.query.id, req.cookies);
+    const user = await userService.getUser(req.query.userId, req.cookies);
 
     if (user == null) return NoContent(res);
 
@@ -53,7 +53,7 @@ const routeUser = (app) => {
   });
 
   app.delete("/api/user", isUserAuthorizedOrAdmin("req.query.id"), async (req, res) => {
-    const deleted = await userService.deleteUser(req.query.id, req.cookies.access_token);
+    const deleted = await userService.deleteUser(req.query.userId, req.cookies.access_token);
 
     if (!deleted) return NoContent(res);
 

@@ -1,38 +1,35 @@
-const mocked_db = {
-  user: [{ id: 1, first_name: "Joao", last_name: "Silva" }],
+import request from "supertest";
+import app from "../src/utils/express_utils.js";
+import prisma from "../src/utils/prisma_utils.js";
+const user = {
+  id: "e922a1de-b5cf-455f-9474-0da70bee623d",
+  first_name: "David",
+  last_name: "Pinto",
+  password: "a",
+  phone_number: "934575689",
+  email: "k@gmail.com",
+  birthday: "2001-03-29",
+  company: "CTT",
+  profile_picture: "",
 };
+describe("Api testing", () => {
+  it("Insert user", async () => {
+    request(app).post("/api/user").send(user).expect(200);
+  });
 
-it("Find User", async () => {
-  let user_details = {
-    id: 1,
-  };
+  it("Find User", async () => {
+    request(app)
+      .post(`/api/user?userId=${user.id}`)
+      .expect(200)
+      .end((err, res) => {
+        expect(res.body.id).toEqual(user.id);
+      });
+  });
 
-  let user = mocked_db.user.find((e) => e.id === user_details.id);
-
-  expect(user.first_name).toBe("Joao");
+  it("Remove user", async () => {
+    request(app).delete(`/api/user?userId=${user.id}`).expect(200);
+  });
 });
-
-it("Insert user", async () => {
-
-  let user = { id: 2, first_name: "Andre", last_name: "Ferreira" };
-
-  mocked_db.user.push(user);
-
-  expect(user.first_name).toBe("Andre");
-});
-
-it("Remove user", async () => {
-  let user_details = {
-    id: 1,
-  };
-
-  mocked_db.user.splice(mocked_db.user.indexOf(mocked_db.user.find((e) => e.id === user_details.id)), 1);
-
-  expect(mocked_db.user).not.toEqual(
-    expect.arrayContaining([
-      expect.objectContaining({
-        id: 1,
-      })
-    ])
-  );
+afterAll((done) => {
+  done();
 });

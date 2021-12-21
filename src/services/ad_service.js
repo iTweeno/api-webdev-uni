@@ -22,8 +22,8 @@ const editAd = async (id, body) => {
 
 const getAd = async (query) => {
   let ad;
-  if (query?.id != null) {
-    ad = await adConnector.getAdById(query.id);
+  if (query?.adId != null) {
+    ad = await adConnector.getAdById(query.adId);
   } else if (query?.title != null && query?.skip != null) {
     ad = await adConnector.getAdsByTitle(query.title, query.skip);
   } else if (query?.owner != null) {

@@ -14,7 +14,7 @@ const routeMessage = (app) => {
   });
 
   app.patch("/api/message", isUserAdmin, async (req, res) => {
-    const edited = await messageService.editMessage(req.query.id, req.body);
+    const edited = await messageService.editMessage(req.query.messageId, req.body);
 
     if (!edited) return BadRequest(res);
 
@@ -22,7 +22,7 @@ const routeMessage = (app) => {
   });
 
   app.get("/api/message", isUserAuthorizedOrAdmin("req.query.id"), async (req, res) => {
-    const message = await messageService.getMessageById(req.query.id);
+    const message = await messageService.getMessageById(req.query.messageId);
 
     if (message == null) return NoContent(res);
 
@@ -38,7 +38,7 @@ const routeMessage = (app) => {
   });
 
   app.delete("/api/message", isUserAdmin, async (req, res) => {
-    const deleted = await messageService.deleteMessage(req.query.id);
+    const deleted = await messageService.deleteMessage(req.query.messageId);
 
     if (!deleted) return NoContent(res);
 
