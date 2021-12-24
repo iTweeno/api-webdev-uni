@@ -1,9 +1,9 @@
+import fs from "fs";
 import userConnector from "../connector/user_connector.js";
-
 import { getTokenId } from "../middleware/jwt.js";
 
-const addUser = async (body) => {
-  const inserted = await userConnector.addUser(body);
+const addUser = async (body, file) => {
+  const inserted = await userConnector.addUser(body, file);
 
   return inserted === 1;
 };
@@ -19,9 +19,13 @@ const getUser = async (id, cookies) => {
 
   if (id != null) {
     user = await userConnector.getUser(id);
+    const bitmap = fs.readFileSync(`./static/${user.profile_picture}`);
+    user.image = Buffer.from(bitmap).toString("base64");
   } else if (cookies.access_token != null) {
     const idFromToken = getTokenId(cookies.access_token);
     user = await userConnector.getUser(idFromToken);
+    const bitmap = fs.readFileSync(`./static/${user.profile_picture}`);
+    user.image = Buffer.from(bitmap).toString("base64");
   }
 
   return user;

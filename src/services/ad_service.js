@@ -1,5 +1,5 @@
+import fs from "fs";
 import { getTokenId } from "../middleware/jwt.js";
-
 import adConnector from "../connector/ad_connector.js";
 
 const addAd = async (body, cookies) => {
@@ -24,6 +24,8 @@ const getAd = async (query) => {
   let ad;
   if (query?.adId != null) {
     ad = await adConnector.getAdById(query.adId);
+    const bitmap = fs.readFileSync(`./static/${ad.userr.profile_picture}`);
+    ad.userr.image = Buffer.from(bitmap).toString("base64");
   } else if (query?.title != null && query?.skip != null) {
     ad = await adConnector.getAdsByTitle(query.title, query.skip);
   } else if (query?.owner != null) {

@@ -46,7 +46,6 @@ const getAdById = async (id) => {
     });
     return query;
   } catch (e) {
-    console.log(e);
     return null;
   }
 };

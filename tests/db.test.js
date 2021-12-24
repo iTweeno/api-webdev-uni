@@ -1,6 +1,5 @@
 import request from "supertest";
 import app from "../src/utils/express_utils.js";
-import prisma from "../src/utils/prisma_utils.js";
 const user = {
   id: "e922a1de-b5cf-455f-9474-0da70bee623d",
   first_name: "David",

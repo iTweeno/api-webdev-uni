@@ -29,7 +29,7 @@ const startExpressInstance = async () => {
   app.use(
     cors({
       credentials: true,
-      origin: `http://localhost:5000`,
+      origin: `http://localhost:${process.env.NODE_ENV === "prod" ? 5000 : 3000}`,
     })
   );
   app.use("/api/ad/incrementNumberOfTimesVisited", rateLimit);

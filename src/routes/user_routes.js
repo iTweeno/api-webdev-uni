@@ -1,12 +1,20 @@
+import multer from "multer";
 import { NoContent, Created, BadRequest, Ok, NotAcceptable } from "../model/common/model.js";
-
 import userService from "../services/user_service.js";
-
 import { isUserAuthorizedOrAdmin, isTokenValid } from "../middleware/jwt.js";
 
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./static");
+  },
+});
+
+const uploadImage = multer({ storage, limits: { fieldSize: 50 * 1024 * 1024 } });
+
 const routeUser = (app) => {
-  app.post("/api/user", async (req, res) => {
-    const inserted = await userService.addUser(req.body);
+  app.post("/api/user", uploadImage.single("profile_picture"), async (req, res) => {
+    console.log(req.body);
+    const inserted = await userService.addUser(req.body, req.file);
 
     if (!inserted) return BadRequest(res);
 

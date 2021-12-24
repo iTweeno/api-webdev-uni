@@ -57,7 +57,7 @@ model userr {
   join_date                        DateTime  @db.Date
   company                          String    @db.VarChar(255)
   profile_picture                  String?   @db.VarChar(255)
-  user_type                        usertype
+  user_type                        usertype  @default(basic)
   ad                               ad[]
   message_message_messengerTouserr message[] @relation("message_messengerTouserr")
   message_message_receiverTouserr  message[] @relation("message_receiverTouserr")

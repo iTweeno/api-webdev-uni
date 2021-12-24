@@ -11,25 +11,9 @@ const addReport = async (body) => {
   }
 };
 
-const getReportById = async (id) => {
+const getAllReports = async () => {
   try {
-    const query = await prisma.report.findFirst({
-      where: {
-        id,
-      },
-    });
-    return query;
-  } catch (e) {
-    return null;
-  }
-};
-
-const getAllReports = async (skip) => {
-  try {
-    const query = await prisma.report.findMany({
-      take: 10,
-      skip: 10 * skip,
-    });
+    const query = await prisma.report.findMany({});
     return query;
   } catch (e) {
     return null;
@@ -37,6 +21,7 @@ const getAllReports = async (skip) => {
 };
 
 const deleteReport = async (id) => {
+  console.log(id);
   try {
     await prisma.report.delete({
       where: {
@@ -49,4 +34,4 @@ const deleteReport = async (id) => {
   }
 };
 
-export default { addReport, getReportById, deleteReport, getAllReports };
+export default { addReport, deleteReport, getAllReports };

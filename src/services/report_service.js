@@ -6,13 +6,8 @@ const addReport = async (body) => {
   return inserted === 1;
 };
 
-const getReports = async (query) => {
-  let reports;
-  if (query.id != null) {
-    reports = await reportConnector.getReportById(query.reportId);
-  } else {
-    reports = await reportConnector.getAllReports(query.skip);
-  }
+const getReports = async () => {
+  const reports = await reportConnector.getAllReports();
 
   return reports;
 };

@@ -14,7 +14,7 @@ const routeReport = (app) => {
   });
 
   app.get("/api/report", isUserAdmin, async (req, res) => {
-    const report = await reportService.getReports(req.query);
+    const report = await reportService.getReports();
 
     if (report == null || report.length === 0) return NoContent(res);
 
@@ -23,7 +23,7 @@ const routeReport = (app) => {
 
   app.delete("/api/report", isUserAdmin, async (req, res) => {
     const deleted = await reportService.deleteReport(req.query.reportId);
-
+    console.log(req.query.reportId);
     if (!deleted) return NoContent(res);
 
     return Ok(res);

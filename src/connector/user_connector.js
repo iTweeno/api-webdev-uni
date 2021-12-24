@@ -4,13 +4,13 @@ import jwt from "jsonwebtoken";
 
 import prisma from "../utils/prisma_utils.js";
 
-const addUser = async (body) => {
+const addUser = async (body, file) => {
   const userToInsert = body;
   try {
     userToInsert.birthday = new Date(body.birthday);
     userToInsert.join_date = new Date();
     userToInsert.user_type = "basic";
-
+    userToInsert.profile_picture = file.filename;
     const salt = await genSalt(10);
     userToInsert.password = await hash(body.password, salt);
 
