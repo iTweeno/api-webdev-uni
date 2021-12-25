@@ -6,7 +6,7 @@
     "prod": "cross-env NODE_ENV=prod node -r dotenv/config .",
     "test": "jest --coverage --forceExit",
     "lint": "eslint ./src --ext .js --fix",
-    "prisma": "prisma db pull && prisma generate",
+    "prisma": "prisma migrate deploy",
     "sonar": "node sonar-project.js"
   },
   "jest": {
