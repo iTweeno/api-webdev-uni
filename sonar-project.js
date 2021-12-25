@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import sonarqubeScanner from "sonarqube-scanner";
 
 sonarqubeScanner(
@@ -6,10 +7,13 @@ sonarqubeScanner(
     options: {
       "sonar.sources": "src",
       "sonar.tests": "src",
-      "sonar.inclusions": "**", // Entry point of your code
+      "sonar.inclusions": "**",
       "sonar.test.inclusions": "src/**/*.spec.js,src/**/*.spec.jsx,src/**/*.test.js,src/**/*.test.jsx",
       "sonar.javascript.lcov.reportPaths": "coverage/lcov.info",
       "sonar.testExecutionReportPaths": "coverage/test-reporter.xml",
+      "sonar.login": "admin",
+      "sonar.password": "a",
+      "sonar.projectKey": "kek",
     },
   },
   () => {}
