@@ -13,7 +13,7 @@ model ad {
   currency                String    @db.VarChar(255)
   last_time_updated       DateTime  @db.Date
   amount_of_times_visited Int
-  description             String    @db.VarChar(255)
+  description             String    @db.Text
   title                   String    @db.VarChar(255)
   owner                   String    @db.Uuid
   location                String    @db.VarChar(255)
