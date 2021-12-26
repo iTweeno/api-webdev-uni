@@ -23,9 +23,10 @@ const addUser = async (body, file) => {
   return 1;
 };
 
-const editUser = async (id, body) => {
+const editUser = async (id, body, file) => {
   const userToEdit = body;
   try {
+    userToEdit.profile_picture = file?.filename;
     userToEdit.birthday = new Date(body.birthday);
     const user = await prisma.userr.findFirst({
       where: {
@@ -38,7 +39,9 @@ const editUser = async (id, body) => {
       userToEdit.user_type = "basic";
     }
 
-    if (userToEdit.password != null) delete userToEdit.password;
+    const salt = await genSalt(10);
+    userToEdit.password = await hash(body.password, salt);
+    if (userToEdit.email != null) delete userToEdit.email;
 
     await prisma.userr.update({
       where: {

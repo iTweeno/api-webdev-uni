@@ -15,7 +15,7 @@ const users = [
     email: "b@gmail.com",
     birthday: "2001-03-29",
     company: "CTT",
-    profile_picture: "",
+    profile_picture: "f237237668834822291a2f9a00448f6d",
   },
   {
     id: "eac2d0a3-5104-484e-8310-2b0da54c4e23",
@@ -26,7 +26,7 @@ const users = [
     email: "d@gmail.com",
     birthday: "2001-03-29",
     company: "Globoaldata",
-    profile_picture: "",
+    profile_picture: "8f99c22a5b377fe34ce362bf91ea4981",
   },
 ];
 

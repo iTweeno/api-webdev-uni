@@ -21,7 +21,6 @@ const getAllReports = async () => {
 };
 
 const deleteReport = async (id) => {
-  console.log(id);
   try {
     await prisma.report.delete({
       where: {

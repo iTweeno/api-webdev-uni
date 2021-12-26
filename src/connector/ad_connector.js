@@ -7,6 +7,7 @@ const addAd = async (body) => {
     adtoAdd.amount_of_times_visited = 0;
     adtoAdd.premium_until = null;
     adtoAdd.salary = Number(adtoAdd.salary);
+    adtoAdd.premium_until = null;
     await prisma.ad.create({
       data: adtoAdd,
     });

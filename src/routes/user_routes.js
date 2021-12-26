@@ -13,7 +13,6 @@ const uploadImage = multer({ storage, limits: { fieldSize: 50 * 1024 * 1024 } })
 
 const routeUser = (app) => {
   app.post("/api/user", uploadImage.single("profile_picture"), async (req, res) => {
-    console.log(req.body);
     const inserted = await userService.addUser(req.body, req.file);
 
     if (!inserted) return BadRequest(res);
@@ -21,13 +20,18 @@ const routeUser = (app) => {
     return Created(res);
   });
 
-  app.patch("/api/user", isUserAuthorizedOrAdmin("req.query.userId"), async (req, res) => {
-    const edited = await userService.editUser(req.query.userId, req.body);
+  app.patch(
+    "/api/user",
+    uploadImage.single("profile_picture"),
+    isUserAuthorizedOrAdmin("req.query.userId"),
+    async (req, res) => {
+      const edited = await userService.editUser(req.query.userId, req.body, req.file);
 
-    if (!edited) return BadRequest(res);
+      if (!edited) return BadRequest(res);
 
-    return Ok(res, req.body);
-  });
+      return Ok(res, req.body);
+    }
+  );
 
   app.get("/api/user", isTokenValid, async (req, res) => {
     const user = await userService.getUser(req.query.userId, req.cookies);
