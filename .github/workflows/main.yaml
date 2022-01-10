@@ -10,13 +10,13 @@ jobs:
     name: Run eslint and test
     runs-on: ubuntu-latest
     env:
-      DATABASE_URL: postgres://postgres:a@localhost:5432/webDb
+      DATABASE_URL: postgresql://postgres:a@localhost:5432/webDb?schema=public
     services:
       postgres:
-        image: postgres
+        image: postgres:12-alpine
         env:
-          POSTGRES_PASSWORD: a
           POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: a
           POSTGRES_DB: webDb
         ports:
           - 5432:5432
