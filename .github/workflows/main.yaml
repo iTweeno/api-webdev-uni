@@ -9,6 +9,8 @@ jobs:
   lint-and-test:
     name: Run eslint and test
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: postgres://postgres:a@localhost:5432/webDb
     services:
       postgres:
         image: postgres
@@ -24,6 +26,8 @@ jobs:
         uses: borales/actions-yarn@v2.1.0
         with:
           cmd: install
+      - name: create env file
+        run: echo DATABASE_URL=${{ env.DATABASE_URL }} >> .env
       - name: migrate
         uses: borales/actions-yarn@v2.1.0
         with:
@@ -36,8 +40,6 @@ jobs:
         uses: borales/actions-yarn@v2.1.0
         with:
           cmd: test
-        env:
-          DATABASE_URL: postgres://postgres:A@localhost:5432/webDb
   build:
     name: Build docker container
     runs-on: ubuntu-latest
