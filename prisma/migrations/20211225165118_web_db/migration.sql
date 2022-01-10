@@ -1,4 +1,3 @@
--- CreateEnum
 CREATE TYPE "adtype" AS ENUM ('paid', 'internship', 'volunteering');
 
 CREATE EXTENSION "uuid-ossp";
