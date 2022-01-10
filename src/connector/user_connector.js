@@ -2,13 +2,23 @@ import { genSalt, hash, compare } from "bcrypt";
 
 import jwt from "jsonwebtoken";
 
+import nodemailer from "nodemailer";
+
 import prisma from "../utils/prisma_utils.js";
 
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL,
+    pass: process.env.PASSWORD,
+  },
+});
+console.log(process.env);
 const addUser = async (body, file) => {
   const userToInsert = body;
   try {
     userToInsert.birthday = new Date(body.birthday);
-    userToInsert.join_date = new Date();
+    userToInsert.join_date = new Date(Date.now());
     userToInsert.user_type = "basic";
     userToInsert.profile_picture = file.filename;
     const salt = await genSalt(10);
@@ -17,7 +27,17 @@ const addUser = async (body, file) => {
     await prisma.userr.create({
       data: userToInsert,
     });
+
+    if (process.env.NODE_ENV === "prod") {
+      transporter.sendMail({
+        from: process.env.EMAIL,
+        to: userToInsert.email,
+        subject: "Welcome to Job Finder!",
+        text: "Welcome to the best place to find jobs!",
+      });
+    }
   } catch (e) {
+    console.log(e);
     return 0;
   }
   return 1;
@@ -41,13 +61,19 @@ const editUser = async (id, body, file) => {
 
     const salt = await genSalt(10);
     userToEdit.password = await hash(body.password, salt);
-    if (userToEdit.email != null) delete userToEdit.email;
 
     await prisma.userr.update({
       where: {
         id,
       },
       data: userToEdit,
+    });
+
+    transporter.sendMail({
+      from: process.env.EMAIL,
+      to: userToEdit.email,
+      subject: "Profile edited",
+      text: "Your profile was recently edited,if you did not do this please contact us",
     });
     return 1;
   } catch (e) {

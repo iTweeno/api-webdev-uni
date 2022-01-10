@@ -24,6 +24,10 @@ jobs:
         uses: borales/actions-yarn@v2.1.0
         with:
           cmd: install
+      - name: migrate
+        uses: borales/actions-yarn@v2.1.0
+        with:
+          cmd: prisma
       - name: Lint
         uses: borales/actions-yarn@v2.1.0
         with:

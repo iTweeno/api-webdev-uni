@@ -1,5 +1,7 @@
 import prisma from "../utils/prisma_utils.js";
 
+const availableCurrencies = ["€", "$", "£"];
+
 const addAd = async (body) => {
   const adtoAdd = body;
   try {
@@ -7,6 +9,12 @@ const addAd = async (body) => {
     adtoAdd.amount_of_times_visited = 0;
     adtoAdd.premium_until = null;
     adtoAdd.salary = Number(adtoAdd.salary);
+    if (!availableCurrencies.includes(adtoAdd.currency)) {
+      return 0;
+    }
+    if (adtoAdd.salary < 0) {
+      return 0;
+    }
     adtoAdd.premium_until = null;
     await prisma.ad.create({
       data: adtoAdd,
@@ -19,7 +27,15 @@ const addAd = async (body) => {
 
 const editAd = async (id, body) => {
   const adToEdit = body;
+  adToEdit.last_time_updated = new Date(Date.now());
+  adToEdit.premium_until = null;
   adToEdit.salary = Number(adToEdit.salary);
+  if (!availableCurrencies.includes(adToEdit.currency)) {
+    return 0;
+  }
+  if (adToEdit.salary < 0) {
+    return 0;
+  }
   try {
     adToEdit.last_time_updated = new Date(Date.now());
 
