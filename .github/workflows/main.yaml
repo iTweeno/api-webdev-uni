@@ -10,7 +10,8 @@ jobs:
     name: Run eslint and test
     runs-on: ubuntu-latest
     env:
-      DATABASE_URL: postgresql://postgres:a@localhost:5432/webDb?schema=public
+      DATABASE_URL: postgresql://postgres:a@postgres:5432/webDb?schema=public
+
     services:
       postgres:
         image: postgres:12-alpine
