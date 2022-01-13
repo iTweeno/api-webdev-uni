@@ -4,22 +4,11 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=dev node -r dotenv/config .",
     "prod": "cross-env NODE_ENV=prod node -r dotenv/config .",
-    "test": "jest --coverage --forceExit",
+    "coverage": "c8 --reporter lcov --reporter text --report-dir coverage report",
+    "test": "c8 --reporter=lcov --reporter=text-summary uvu tests",
     "lint": "eslint ./src --ext .js --fix",
     "prisma": "prisma migrate dev --name WebDb",
     "sonar": "node sonar-project.js"
-  },
-  "jest": {
-    "testEnvironment": "node",
-    "coveragePathIgnorePatterns": [
-      "/node_modules/"
-    ],
-    "testResultsProcessor": "jest-sonar-reporter"
-  },
-  "jestSonar": {
-    "reportPath": "coverage",
-    "reportFile": "test-reporter.xml",
-    "indent": 4
   },
   "dependencies": {
     "@prisma/client": "^3.6.0",
@@ -38,9 +27,7 @@
     "prisma": "^3.6.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.16.0",
-    "@babel/plugin-transform-modules-commonjs": "^7.16.5",
-    "babel-jest": "^27.4.5",
+    "c8": "^7.11.0",
     "eslint": "^7.25.0",
     "eslint-config-airbnb": "^19.0.1",
     "eslint-config-prettier": "^8.1.0",
@@ -48,12 +35,8 @@
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-promise": "^4.3.1",
-    "jest": "^27.3.1",
-    "jest-mock-extended": "^2.0.4",
-    "jest-sonar-reporter": "^2.0.0",
     "prettier": "^2.3.1",
     "sonarqube-scanner": "^2.8.1",
-    "supertest": "^6.1.6",
-    "ts-jest": "^27.1.2"
+    "uvu": "^0.5.3"
   }
 }

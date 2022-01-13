@@ -13,14 +13,14 @@ const transporter = nodemailer.createTransport({
     pass: process.env.PASSWORD,
   },
 });
-console.log(process.env);
+
 const addUser = async (body, file) => {
   const userToInsert = body;
   try {
     userToInsert.birthday = new Date(body.birthday);
     userToInsert.join_date = new Date(Date.now());
     userToInsert.user_type = "basic";
-    userToInsert.profile_picture = file.filename;
+    userToInsert.profile_picture = file?.filename;
     const salt = await genSalt(10);
     userToInsert.password = await hash(body.password, salt);
 

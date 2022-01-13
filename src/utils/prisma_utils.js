@@ -1,11 +1,7 @@
-import PrismaLib from "@prisma/client";
+import pkg from "@prisma/client";
 
-// eslint-disable-next-line import/no-mutable-exports
-let prisma;
-if (PrismaLib == null) {
-  prisma = PrismaLib;
-} else {
-  prisma = new PrismaLib.PrismaClient();
-}
+const { PrismaClient } = pkg;
+
+const prisma = new PrismaClient();
 
 export default prisma;
