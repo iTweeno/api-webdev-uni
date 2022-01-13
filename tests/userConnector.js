@@ -1,6 +1,6 @@
 import { test } from "uvu";
 import * as assert from "uvu/assert";
-process.env.DATABASE_URL="postgresql://postgres:a@localhost:5432/webDb?schema=public"
+process.env.DATABASE_URL="postgresql://postgres:a@postgres:5432/webDb?schema=public"
 import userConnector from "../src/connector/user_connector.js";
 
 const user = {
