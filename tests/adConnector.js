@@ -2,7 +2,7 @@ import { test } from "uvu";
 import * as assert from "uvu/assert";
 import adConnector from "../src/connector/ad_connector.js";
 import seedDatabase from "../src/databaseSeeding.js";
-process.env.DATABASE_URL = "postgresql://postgres:a@localhost:5432/webDb?schema=public";
+process.env.DATABASE_URL = "postgresql://postgres:a@postgres:5432/webDb?schema=public";
 
 const ad = {
   id: "275f45cc-7630-11ec-90d6-0242ac120003",
