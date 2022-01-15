@@ -6,6 +6,12 @@ import nodemailer from "nodemailer";
 
 import prisma from "../utils/prisma_utils.js";
 
+const validateEmail = (email) => {
+  const re =
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(String(email).toLowerCase());
+};
+
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -16,6 +22,9 @@ const transporter = nodemailer.createTransport({
 
 const addUser = async (body, file) => {
   const userToInsert = body;
+  if (!validateEmail(body.email)) {
+    return 0;
+  }
   try {
     userToInsert.birthday = new Date(body.birthday);
     userToInsert.join_date = new Date(Date.now());
@@ -37,7 +46,6 @@ const addUser = async (body, file) => {
       });
     }
   } catch (e) {
-    console.log(e);
     return 0;
   }
   return 1;
