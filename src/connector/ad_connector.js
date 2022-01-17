@@ -26,6 +26,7 @@ const addAd = async (body) => {
 };
 
 const editAd = async (id, body) => {
+  console.log("a");
   const adToEdit = body;
   adToEdit.last_time_updated = new Date(Date.now());
   adToEdit.premium_until = null;
